@@ -30,8 +30,8 @@ CREATE TABLE game_players (
 );
 
 CREATE TABLE word (
-                      id SERIAL PRIMARY KEY,
-                      word TEXT UNIQUE NOT NULL
+    id SERIAL PRIMARY KEY,
+    word TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE game_cards (
