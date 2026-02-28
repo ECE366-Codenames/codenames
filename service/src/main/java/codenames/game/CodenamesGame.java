@@ -34,14 +34,16 @@ public class CodenamesGame {
         }
     }
     private void playGame() {
-        List<Word> words = wordRepo.findAll();
+        List<Word> boardWords = wordRepo.getRandomWords(25);
 
-        System.out.println("Total words in DB: " + words.size());
+        for (int i = 0; i < boardWords.size(); i++) {
+            System.out.printf("%15s", boardWords.get(i).getWord());
 
-        words.stream().limit(10).forEach(w -> System.out.println(w.getWord()));
+            if ((i + 1) % 5 == 0) {System.out.println();}
+        }
     }
 
     private void showHistory() {
-
+        System.out.println("History coming soon...");
     }
 }
