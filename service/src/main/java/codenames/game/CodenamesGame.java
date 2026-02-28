@@ -37,7 +37,7 @@ public class CodenamesGame {
         List<Word> boardWords = wordRepo.getRandomWords(25);
 
         for (int i = 0; i < boardWords.size(); i++) {
-            System.out.printf("%15s", boardWords.get(i).getWord());
+            System.out.printf("%d: %-15s", i+1, boardWords.get(i).getWord());
 
             if ((i + 1) % 5 == 0) {System.out.println();}
         }
