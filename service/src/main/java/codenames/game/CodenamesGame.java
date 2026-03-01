@@ -20,6 +20,8 @@ public class CodenamesGame {
     private static final String RED = "\u001B[31m";
     private static final String BLUE = "\u001B[34m";
     private static final String ASSASSIN = "\u001B[35m";
+    private static final String BG_WHITE = "\u001B[47m";
+    private static final String FG_BLACK = "\u001B[30m";
     private final GameService gameService;
 
     private static class LocalCard {
@@ -63,6 +65,8 @@ public class CodenamesGame {
     }
     private void playGame() {
 
+        boolean redTurn = true;
+
         Scanner scanner = new Scanner(System.in);
 
         List<Word> boardWords = wordRepo.getRandomWords(25);
@@ -74,23 +78,89 @@ public class CodenamesGame {
             board.add(new LocalCard(boardWords.get(i), cardTypes.get(i)));
         }
 
-        System.out.println("\n----- SPYMASTER -----");
-        printBoard(board, true);
+        while (true) {
+            System.out.println("\n----- SPYMASTER -----");
+            printBoard(board, true);
 
-        System.out.print("\nEnter clue: ");
-        String clue = scanner.nextLine();
-        System.out.print("\nEnter number of cards: ");
-        int numCards = scanner.nextInt();
+            System.out.print("\nEnter clue: ");
+            String clue = scanner.nextLine();
+            System.out.print("\nEnter number of cards: ");
+            int numCards = scanner.nextInt();
 
-        for (int i = 0; i < 20; i++) {System.out.println();} // clear screen
+            for (int i = 0; i < 20; i++) {System.out.println();} // clear screen
 
-        System.out.println("\n----- FIELD AGENT -----");
+            System.out.println("\n----- FIELD AGENT -----");
 
-        int redRemaining = 9;
-        int blueRemaining = 8;
+            int redRemaining = 9;
+            int blueRemaining = 8;
 
-        printBoard(board, false);
+            int turn = 1;
+            while (turn <= numCards) {
 
+                System.out.println("Your clue: " + clue);
+                System.out.println("Guesses remaining: " + (numCards - turn + 1));
+                printBoard(board, false);
+
+                System.out.println("\nChoose a card number (1-25, 0 to end turn): ");
+                int choice = scanner.nextInt() - 1;
+                for (int i = 0; i < 20; i++) {
+                    System.out.println();
+                } // clear screen
+
+                if (choice < -1 || choice > board.size() - 1) {
+                    System.out.println("Invalid choice. Try again.");
+                    continue;
+                }
+
+                LocalCard selected = board.get(choice);
+
+                if (selected.revealed) {
+                    System.out.println("This card has already been revealed. Try again.");
+                    continue;
+                }
+
+                selected.revealed = true;
+
+                switch (selected.cardType) {
+                    case RED -> {
+                        redRemaining--;
+                        turn++;
+                        System.out.println(RED + "RED AGENT!" + RESET);
+                    }
+                    case BLUE -> {
+                        blueRemaining--;
+                        turn++;
+                        System.out.println(BLUE + "BLUE AGENT!" + RESET);
+                    }
+                    case NEUTRAL -> {
+                        turn++;
+                        System.out.println("NEUTRAL AGENT!");
+                    }
+                    case ASSASSIN -> {
+                        turn = numCards;
+                        System.out.println(ASSASSIN + "ASSASSIN! GAME OVER!" + RESET);
+                        printBoard(board, true);
+                        return;
+                    }
+                }
+
+                if (redRemaining == 0) {
+                    System.out.println(RED + "RED AGENT WON!" + RESET);
+                    return;
+                }
+                if (blueRemaining == 0) {
+                    System.out.println(BLUE + "BLUE AGENT WON!" + RESET);
+                    return;
+                }
+
+            }
+            printBoard(board, false);
+            System.out.println("Turn complete. Press enter to continue...");
+            scanner.nextLine();
+            scanner.nextLine();
+            for (int i = 0; i < 20; i++) {System.out.println();} // clear screen
+            redTurn = !redTurn;
+        }
     }
 
     private void showHistory() {
@@ -107,12 +177,19 @@ public class CodenamesGame {
 
             String displayWord = card.word.getWord();
 
+            if (card.revealed) {
+                displayWord = BG_WHITE + displayWord + RESET;
+                if (card.cardType == CardType.NEUTRAL) {
+                    displayWord = FG_BLACK + displayWord + RESET;
+                }
+            }
+
             if (card.revealed || spymasterView) {
                 switch (card.cardType) {
-                    case RED -> displayWord = RED + displayWord + RESET;
-                    case BLUE -> displayWord = BLUE + displayWord + RESET;
-                    case ASSASSIN -> displayWord = ASSASSIN + displayWord + RESET;
-                    case NEUTRAL -> {}
+                    case RED -> displayWord = RED + displayWord + RESET + "    ";
+                    case BLUE -> displayWord = BLUE + displayWord + RESET + "    ";
+                    case ASSASSIN -> displayWord = ASSASSIN + displayWord + RESET + "    ";
+                    case NEUTRAL -> displayWord = displayWord + "    ";
                 }
             }
 
