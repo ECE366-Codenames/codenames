@@ -6,10 +6,7 @@ import codenames.repository.WordRepository;
 import codenames.service.GameService;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 @Component
 public class CodenamesGame {
@@ -65,7 +62,11 @@ public class CodenamesGame {
     }
     private void playGame() {
 
-        boolean redTurn = true;
+        boolean redStarts = new Random().nextBoolean();
+        boolean redTurn = redStarts;
+
+        int redRemaining = redStarts ? 9 : 8;
+        int blueRemaining = redStarts ? 8 : 9;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -91,9 +92,6 @@ public class CodenamesGame {
 
             System.out.println("\n----- FIELD AGENT -----");
 
-            int redRemaining = 9;
-            int blueRemaining = 8;
-
             int turn = 1;
             while (turn <= numCards) {
 
@@ -102,7 +100,10 @@ public class CodenamesGame {
                 printBoard(board, false);
 
                 System.out.println("\nChoose a card number (1-25, 0 to end turn): ");
-                int choice = scanner.nextInt() - 1;
+                int choice = scanner.nextInt();
+                if (choice == 0) {break;}
+                choice--;
+
                 for (int i = 0; i < 20; i++) {
                     System.out.println();
                 } // clear screen
