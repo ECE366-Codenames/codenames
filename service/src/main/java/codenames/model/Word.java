@@ -1,4 +1,4 @@
-package codenames.game;
+package codenames.model;
 
 import jakarta.persistence.*;
 
