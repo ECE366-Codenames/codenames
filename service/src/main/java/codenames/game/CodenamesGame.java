@@ -62,11 +62,9 @@ public class CodenamesGame {
     }
     private void playGame() {
 
-        boolean redStarts = new Random().nextBoolean();
-        boolean redTurn = redStarts;
-
-        int redRemaining = redStarts ? 9 : 8;
-        int blueRemaining = redStarts ? 8 : 9;
+        boolean redTurn = true;
+        int redRemaining = 9;
+        int blueRemaining = 8;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -99,7 +97,7 @@ public class CodenamesGame {
                 System.out.println("Guesses remaining: " + (numCards - turn + 1));
                 printBoard(board, false);
 
-                System.out.println("\nChoose a card number (1-25, 0 to end turn): ");
+                System.out.print("\nChoose a card number (1-25, 0 to end turn): ");
                 int choice = scanner.nextInt();
                 if (choice == 0) {break;}
                 choice--;
@@ -147,11 +145,17 @@ public class CodenamesGame {
 
                 if (redRemaining == 0) {
                     System.out.println(RED + "RED AGENT WON!" + RESET);
-                    return;
+                    System.out.println("Game complete. Press enter to go home...");
+                    scanner.nextLine();
+                    scanner.nextLine();
+                    start();
                 }
                 if (blueRemaining == 0) {
                     System.out.println(BLUE + "BLUE AGENT WON!" + RESET);
-                    return;
+                    System.out.println("Game complete. Press enter to go home...");
+                    scanner.nextLine();
+                    scanner.nextLine();
+                    start();
                 }
 
             }

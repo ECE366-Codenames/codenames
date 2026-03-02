@@ -8,10 +8,10 @@ CREATE TABLE player (
     is_online BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE friend (
-    player_id INTEGER REFERENCES player (id),
-    friend_id INTEGER REFERENCES player (id),
-    PRIMARY KEY (player_id, friend_id)
+CREATE TABLE friendship (
+    player1_id INTEGER REFERENCES player (id),
+    player2_id INTEGER REFERENCES player (id),
+    PRIMARY KEY (player1_id, player2_id) --be careful not to add friendship twice (reversed)
 );
 
 CREATE TABLE game (
@@ -24,8 +24,8 @@ CREATE TABLE game (
 CREATE TABLE game_players (
     game_id INTEGER REFERENCES game(id),
     player_id INTEGER REFERENCES player (id),
-    team INTEGER, -- either 1 or 2
-    role VARCHAR(20), -- either spymaster or field agent
+    is_red BOOLEAN, -- true for red, false for blue
+    is_spymaster BOOLEAN, -- true for spymaster, false for field agent
     PRIMARY KEY (game_id, player_id)
 );
 
