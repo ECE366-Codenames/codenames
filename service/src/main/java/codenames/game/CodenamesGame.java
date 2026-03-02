@@ -139,7 +139,10 @@ public class CodenamesGame {
                         turn = numCards;
                         System.out.println(ASSASSIN + "ASSASSIN! GAME OVER!" + RESET);
                         printBoard(board, true);
-                        return;
+                        System.out.println("Game complete. Press enter to go home...");
+                        scanner.nextLine();
+                        scanner.nextLine();
+                        start();
                     }
                 }
 
