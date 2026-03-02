@@ -17,10 +17,9 @@ CREATE TABLE friendship (
 CREATE TABLE game (
   id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  waiting BOOLEAN DEFAULT 1, --1 when waiting, 0 once game started
-  game_ended BOOLEAN DEFAULT 0,
+  status VARCHAR(20) DEFAULT 'waiting', --waiting, started, complete (enforce in backend)
   red_turn BOOLEAN DEFAULT 1, --red goes first
-  winner_team BOOLEAN --0 for red, 1 for blue
+  red_win BOOLEAN --1 for red, 0 for blue
 );
 
 CREATE TABLE game_players (
