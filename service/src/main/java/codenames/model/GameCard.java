@@ -15,7 +15,7 @@ public class GameCard {
     private Game game;
 
     @ManyToOne
-    @JoinColumn(name = "word_id")
+    @JoinColumn(name = "word")
     private Word word;
 
     @Enumerated(EnumType.STRING)

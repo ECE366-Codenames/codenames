@@ -8,8 +8,6 @@ public class Word {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String word;
 
     public Word() {}
@@ -17,7 +15,6 @@ public class Word {
         this.word = word;
     }
 
-    public Long getId() { return id; }
     public String getWord() { return word; }
 
     public void setWord(String word) { this.word = word; }
