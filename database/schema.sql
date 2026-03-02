@@ -9,9 +9,9 @@ CREATE TABLE player (
 );
 
 CREATE TABLE friendship (
-    friend1_id INTEGER REFERENCES player (id),
-    friend2_id INTEGER REFERENCES player (id),
-    PRIMARY KEY (friend1_id, friend2_id) --be careful not to add friendship twice (reversed)
+    player1_id INTEGER REFERENCES player (id),
+    player2_id INTEGER REFERENCES player (id),
+    PRIMARY KEY (player1_id, player2_id) --be careful not to add friendship twice (reversed)
 );
 
 CREATE TABLE game (
