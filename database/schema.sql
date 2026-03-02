@@ -18,7 +18,7 @@ CREATE TABLE game (
   id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(20) DEFAULT 'waiting', --waiting, started, complete (enforce in backend)
-  red_turn BOOLEAN DEFAULT 1, --red goes first
+  red_turn BOOLEAN DEFAULT true, --red goes first
   red_win BOOLEAN --1 for red, 0 for blue
 );
 
