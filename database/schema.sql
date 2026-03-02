@@ -8,38 +8,38 @@ CREATE TABLE player (
     is_online BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE friend (
-    player_id INTEGER REFERENCES player (id),
-    friend_id INTEGER REFERENCES player (id),
-    PRIMARY KEY (player_id, friend_id)
+CREATE TABLE friendship (
+    friend1_id INTEGER REFERENCES player (id),
+    friend2_id INTEGER REFERENCES player (id),
+    PRIMARY KEY (friend1_id, friend2_id) --be careful not to add friendship twice (reversed)
 );
 
 CREATE TABLE game (
   id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  status VARCHAR(20) DEFAULT 'waiting',
-  winner_team INTEGER
+  status VARCHAR(20) DEFAULT 'waiting', --waiting, started, complete (enforce in backend)
+  red_turn BOOLEAN DEFAULT 1, --red goes first
+  red_win BOOLEAN --1 for red, 0 for blue
 );
 
 CREATE TABLE game_players (
     game_id INTEGER REFERENCES game(id),
     player_id INTEGER REFERENCES player (id),
-    team INTEGER, -- either 1 or 2
-    role VARCHAR(20), -- either spymaster or field agent
+    is_red BOOLEAN, -- true for red, false for blue
+    is_spymaster BOOLEAN, -- true for spymaster, false for field agent
     PRIMARY KEY (game_id, player_id)
 );
 
 CREATE TABLE word (
-    id SERIAL PRIMARY KEY,
-    word TEXT UNIQUE NOT NULL
+    word TEXT PRIMARY KEY
 );
 
-CREATE TABLE game_cards (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE game_cards ( --table of cards in active games
     game_id INTEGER REFERENCES game(id),
-    word_id INTEGER REFERENCES word(id),
-    card_type VARCHAR(20), -- blue, red, neutral, or assassin
+    word TEXT NOT NULL REFERENCES word(word), 
+    card_type VARCHAR(20), -- blue, red, neutral, or assassin (have to be careful to enforce)
     revealed BOOLEAN DEFAULT FALSE,
-    position INTEGER -- 1-25
+    position INTEGER, -- 1-25
+    PRIMARY KEY (game_id, word)
 );
 
