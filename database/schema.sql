@@ -31,15 +31,16 @@ CREATE TABLE game_players (
 );
 
 CREATE TABLE word (
-    word TEXT PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    word TEXT UNIQUE NOT NULL
 );
 
 CREATE TABLE game_cards ( --table of cards in active games
+    id SERIAL PRIMARY KEY,
     game_id INTEGER REFERENCES game(id),
-    word TEXT NOT NULL REFERENCES word(word), 
+    word_id INTEGER REFERENCES word(id),
     card_type VARCHAR(20), -- blue, red, neutral, or assassin (have to be careful to enforce)
     revealed BOOLEAN DEFAULT FALSE,
-    position INTEGER, -- 1-25
-    PRIMARY KEY (game_id, word)
+    position INTEGER -- 1-25
 );
 
