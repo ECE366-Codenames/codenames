@@ -21,10 +21,7 @@ public class WebserviceContoller {
     }
 
     @PostMapping("/create")
-    public String createPlayer(@RequestBody String json) {
-        System.out.println("createPlayer");
-        System.out.println(json);
-        ObjectMapper objectMapper = new ObjectMapper();
-        return this.gameService.createGame();
+    public Long createGame() {
+        return gameService.createGame();
     }
 }

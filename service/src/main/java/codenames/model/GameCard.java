@@ -15,10 +15,11 @@ public class GameCard {
     private Game game;
 
     @ManyToOne
-    @JoinColumn(name = "word")
+    @JoinColumn(name = "word_id")
     private Word word;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "card_type")
     private CardType cardType;
 
     private boolean revealed = false;
