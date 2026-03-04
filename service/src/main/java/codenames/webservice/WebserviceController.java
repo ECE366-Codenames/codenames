@@ -27,4 +27,10 @@ public class WebserviceController {
     public Long createGame() {
         return gameService.createGame();
     }
+
+    @PostMapping("/game/{id}/guess/{position}")
+    public void guess(@PathVariable Long id, @PathVariable int position) {
+        gameService.guess(id, position);
+    }
+
 }
