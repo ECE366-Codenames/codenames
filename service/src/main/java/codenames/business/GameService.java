@@ -38,11 +38,16 @@ public class GameService {
             cards.add(card);
         }
 
+        game.setCards(cards);
+
         Game savedGame = gameRepository.save(game);
 
         return savedGame.getId();
 
+    }
 
+    public Game getGameById(Long id) {
+        return gameRepository.findById(id).orElseThrow(() -> new RuntimeException("Game not found"));
     }
 
     private List<CardType> assignCardTypes() {

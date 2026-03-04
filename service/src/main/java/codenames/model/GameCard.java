@@ -1,5 +1,6 @@
 package codenames.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +13,7 @@ public class GameCard {
 
     @ManyToOne
     @JoinColumn(name = "game_id")
+    @JsonIgnore
     private Game game;
 
     @ManyToOne

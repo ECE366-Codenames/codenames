@@ -42,9 +42,12 @@ public class Game {
     public Long getId() { return id; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public String getStatus() { return status; }
-    public String getWinnerTeam() { return redWin ? "red" : "blue"; }
+    public Boolean getRedWin() { return redWin; }
+    public Boolean getRedTurn() { return redTurn; }
+    public List<GameCard> getCards() { return cards; }
 
     public void setStatus(String status) { this.status = status; }
     public void setRedTurn(Boolean redTurn) { this.redTurn = redTurn; }
     public void setRedWin(Boolean redWin) { this.redWin = redWin; }
+    public void setCards(List<GameCard> cards) { this.cards = cards; }
 }
