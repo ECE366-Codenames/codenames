@@ -8,7 +8,7 @@ docker compose build
 docker compose up
 ```
 
-## In Postman:
+## In Postman
 
 To get information about a specific game:
 ```
