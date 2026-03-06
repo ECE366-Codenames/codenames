@@ -4,11 +4,13 @@ public class CardDTO {
     private String word;
     private String type; // null if not spymaster
     private boolean revealed;
+    private int position;
 
-    public CardDTO(String word, String type, boolean revealed) {
+    public CardDTO(String word, boolean revealed, String type, int position) {
         this.word = word;
-        this.type = type;
         this.revealed = revealed;
+        this.type = type;
+        this.position = position;
     }
 
     public String getWord() {
@@ -22,4 +24,6 @@ public class CardDTO {
     public boolean isRevealed() {
         return revealed;
     }
+
+    public int getPosition() {return position;}
 }
