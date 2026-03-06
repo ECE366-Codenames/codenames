@@ -14,6 +14,10 @@ To get information about a specific game:
 ```
 GET: localhost:8080/game/{id}
 ```
+or
+```
+GET: localhost:8080/game/{id}?spymaster={true/false}
+```
 
 To create a new game:
 ```

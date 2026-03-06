@@ -1,5 +1,7 @@
 package codenames.business;
 
+import codenames.dto.CardDTO;
+import codenames.dto.GameDTO;
 import codenames.model.CardType;
 import codenames.model.Game;
 import codenames.model.GameCard;
@@ -115,6 +117,16 @@ public class GameService {
         }
     }
 
+    public GameDTO toDTO(Game game, boolean isSpymaster) {
+        List<CardDTO> cardsDTOs = game.getCards().stream().map(card -> new CardDTO(
+                card.getWord().toString(),
+                card.isRevealed(),
+                isSpymaster ? card.getCardType().toString() : null,
+                card.getPosition()
+        )).toList();
+
+        return new GameDTO(game.getId(), game.getStatus(), game.getRedTurn(), cardsDTOs);
+    }
 }
 
 

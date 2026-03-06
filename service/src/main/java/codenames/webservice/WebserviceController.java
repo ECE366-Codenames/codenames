@@ -1,11 +1,9 @@
 package codenames.webservice;
 
 import codenames.business.GameService;
+import codenames.dto.GameDTO;
 import codenames.model.Game;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class WebserviceController {
@@ -16,11 +14,11 @@ public class WebserviceController {
     }
 
     @GetMapping("/game/{id}") // returns game with id
-    public Game getGameById(@PathVariable Long id) {
+    public GameDTO getGameById(@PathVariable Long id, @RequestParam(required = false) boolean spymaster) {
         Game game = gameService.getGameById(id);
         System.out.println("Getting game by id: " + id);
         System.out.println(game.getCards());
-        return gameService.getGameById(id);
+        return gameService.toDTO(game, spymaster);
     }
 
     @PostMapping("/create") // creates new game with 25 cards and returns game id
