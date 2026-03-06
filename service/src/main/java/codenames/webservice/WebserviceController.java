@@ -15,7 +15,7 @@ public class WebserviceController {
         this.gameService = gameService;
     }
 
-    @GetMapping("/game/{id}")
+    @GetMapping("/game/{id}") // returns game with id
     public Game getGameById(@PathVariable Long id) {
         Game game = gameService.getGameById(id);
         System.out.println("Getting game by id: " + id);
@@ -23,12 +23,12 @@ public class WebserviceController {
         return gameService.getGameById(id);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create") // creates new game with 25 cards and returns game id
     public Long createGame() {
         return gameService.createGame();
     }
 
-    @PostMapping("/game/{id}/guess/{position}")
+    @PostMapping("/game/{id}/guess/{position}") // guesses word at position, sets that card as revealed and updates turn
     public void guess(@PathVariable Long id, @PathVariable int position) {
         gameService.guess(id, position);
     }
