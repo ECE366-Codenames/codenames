@@ -1,5 +1,6 @@
 package codenames.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,13 +13,15 @@ public class GameCard {
 
     @ManyToOne
     @JoinColumn(name = "game_id")
+    @JsonIgnore
     private Game game;
 
     @ManyToOne
-    @JoinColumn(name = "word")
+    @JoinColumn(name = "word_id")
     private Word word;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "card_type")
     private CardType cardType;
 
     private boolean revealed = false;
