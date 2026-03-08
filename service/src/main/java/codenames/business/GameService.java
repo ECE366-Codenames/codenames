@@ -126,6 +126,13 @@ public class GameService {
     @Transactional
     public void abort(Long gameId){
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+        if(game.getStatus() == Status.WAITING){
+            game.setStatus(Status.ABORTED);
+            return;
+        }
+        if(game.getStatus() != Status.STARTED){
+            throw new RuntimeException("Game already ended");
+        }
         gameCardRepository.deleteByGameId(gameId);
         game.setStatus(Status.ABORTED);
     }
@@ -135,7 +142,6 @@ public class GameService {
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
         if(game.getStatus() != Status.COMPLETE){
             throw new RuntimeException("Game not complete");
-            return;
         }
         gameCardRepository.deleteByGameId(gameId);
     }
