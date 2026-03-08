@@ -123,10 +123,21 @@ public class GameService {
         }
     }
 
+    @Transactional
     public void abort(Long gameId){
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
         gameCardRepository.deleteByGameId(gameId);
         game.setStatus(Status.ABORTED);
+    }
+
+    @Transactional
+    public void cleanup(Long gameId){ // delete game cards from db after game successfully completed
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+        if(game.getStatus() != Status.COMPLETE){
+            throw new RuntimeException("Game not complete");
+            return;
+        }
+        gameCardRepository.deleteByGameId(gameId);
     }
 
     public GameDTO toDTO(Game game, boolean isSpymaster) {
