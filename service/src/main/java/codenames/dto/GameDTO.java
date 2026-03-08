@@ -1,14 +1,15 @@
 package codenames.dto;
 
 import java.util.List;
+import codenames.model.Status;
 
 public class GameDTO {
     private long id;
-    private String status;
+    private Status status;
     private boolean redTurn;
     private List<CardDTO> cards;
 
-    public GameDTO(long id, String status, boolean redTurn, List<CardDTO> cards) {
+    public GameDTO(long id, Status status, boolean redTurn, List<CardDTO> cards) {
         this.id = id;
         this.status = status;
         this.redTurn = redTurn;
@@ -18,7 +19,7 @@ public class GameDTO {
     public long getId() {
         return id;
     }
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
     public boolean isRedTurn() {
