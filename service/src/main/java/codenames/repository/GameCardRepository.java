@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface GameCardRepository extends JpaRepository<GameCard, Long> {
     Optional<GameCard> findByGameIdAndPosition(Long gameId, int position);
+    void deleteByGameId(Long gameId);
 }

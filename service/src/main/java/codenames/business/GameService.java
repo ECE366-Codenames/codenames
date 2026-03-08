@@ -123,6 +123,12 @@ public class GameService {
         }
     }
 
+    public void abort(Long gameId){
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+        gameCardRepository.deleteByGameId(gameId);
+        game.setStatus(Status.ABORTED);
+    }
+
     public GameDTO toDTO(Game game, boolean isSpymaster) {
         List<CardDTO> cardsDTOs = game.getCards().stream().map(card -> new CardDTO(
                 card.getWord().toString(),
