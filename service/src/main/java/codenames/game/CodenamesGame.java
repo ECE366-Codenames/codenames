@@ -173,10 +173,26 @@ public class CodenamesGame {
 
     private void showHistory() {
         System.out.println("History coming soon...");
+    	System.out.print("""
+                \nEnter 2 to go back to menu:\s""");
+
+	int back = scanner.nextInt();
+
+        if (option == 2) {
+            start();
+        }
     }
 
     private void showRules() {
         System.out.println("Rules coming soon...");
+    	System.out.print("""
+                \nEnter 2 to go back to menu:\s""");
+
+        int back = scanner.nextInt();
+
+        if (option == 2) {
+            start();
+        }
     }
 
     private void printBoard(List<LocalCard> board, boolean spymasterView) {
