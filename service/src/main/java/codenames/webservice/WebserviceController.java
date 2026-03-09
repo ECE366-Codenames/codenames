@@ -21,9 +21,18 @@ public class WebserviceController {
         return gameService.toDTO(game, spymaster);
     }
 
-    @PostMapping("/create") // creates new game with 25 cards and returns game id
+    @PostMapping("/create") // creates new game, puts in status waiting
     public Long createGame() {
         return gameService.createGame();
+    }
+
+    //add: add player to game
+    
+    @PostMapping("/game/{id}/start") // begins game
+    public Long startGame(@PathVariable Long id) {
+        //add: check if enough players have joined
+        return gameService.startGame(id);
+        //add: assign roles to players 
     }
 
     @PostMapping("/game/{id}/guess/{position}") // guesses word at position, sets that card as revealed and updates turn
@@ -40,5 +49,7 @@ public class WebserviceController {
     public void cleanup(@PathVariable Long id) {
         gameService.cleanup(id);
     }
+
+
 
 }
