@@ -16,7 +16,9 @@ public class Game {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
 
     @Column(name = "red_turn")
     private Boolean redTurn;
@@ -34,19 +36,19 @@ public class Game {
 
     public Game() {}
 
-    public Game(String status) {
+    public Game(Status status) {
         this.status = status;
         this.createdAt = LocalDateTime.now();
     }
 
     public Long getId() { return id; }
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public String getStatus() { return status; }
+    public Status getStatus() { return status; }
     public Boolean getRedWin() { return redWin; }
     public Boolean getRedTurn() { return redTurn; }
     public List<GameCard> getCards() { return cards; }
 
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(Status status) { this.status = status; }
     public void setRedTurn(Boolean redTurn) { this.redTurn = redTurn; }
     public void setRedWin(Boolean redWin) { this.redWin = redWin; }
     public void setCards(List<GameCard> cards) { this.cards = cards; }

@@ -5,6 +5,7 @@ import codenames.dto.GameDTO;
 import codenames.model.CardType;
 import codenames.model.Game;
 import codenames.model.GameCard;
+import codenames.model.Status;
 import codenames.model.Word;
 import codenames.repository.GameCardRepository;
 import codenames.repository.GameRepository;
@@ -31,8 +32,13 @@ public class GameService {
 
     public Long createGame() {
 
-        Game game = new Game("CREATED");
+        Game game = new Game(Status.WAITING);
         game.setRedTurn(true);
+
+        //once all 4 players have joined, proceed (not relevant in current form)
+        //in the future, should break into seperate methods: create game and start game
+
+        game.setStatus(Status.STARTED);
 
         List<Word> words = wordRepository.getRandomWords(25);
         List<CardType> cardTypes = assignCardTypes();
@@ -82,7 +88,7 @@ public class GameService {
         switch (card.getCardType()) {
             case ASSASSIN:
                 game.setRedWin(!game.getRedTurn());
-                game.setStatus("RED WIN");
+                game.setStatus(Status.COMPLETE);
                 break;
             case NEUTRAL:
                 game.setRedTurn(!game.getRedTurn());
@@ -109,12 +115,35 @@ public class GameService {
         long blueRemaining = game.getCards().stream().filter(c -> c.getCardType() == CardType.BLUE && !c.isRevealed()).count();
 
         if (redRemaining == 0) {
-            game.setStatus("RED WIN");
+            game.setStatus(Status.COMPLETE);
             game.setRedWin(true);
         } else if (blueRemaining == 0) {
-            game.setStatus("BLUE WIN");
+            game.setStatus(Status.COMPLETE);
             game.setRedWin(false);
         }
+    }
+
+    @Transactional
+    public void abort(Long gameId){
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+        if(game.getStatus() == Status.WAITING){
+            game.setStatus(Status.ABORTED);
+            return;
+        }
+        if(game.getStatus() != Status.STARTED){
+            throw new RuntimeException("Game already ended");
+        }
+        gameCardRepository.deleteByGameId(gameId);
+        game.setStatus(Status.ABORTED);
+    }
+
+    @Transactional
+    public void cleanup(Long gameId){ // delete game cards from db after game successfully completed
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+        if(game.getStatus() != Status.COMPLETE){
+            throw new RuntimeException("Game not complete");
+        }
+        gameCardRepository.deleteByGameId(gameId);
     }
 
     public GameDTO toDTO(Game game, boolean isSpymaster) {
@@ -125,7 +154,7 @@ public class GameService {
                 card.getPosition()
         )).toList();
 
-        return new GameDTO(game.getId(), game.getStatus(), game.getRedTurn(), cardsDTOs);
+        return new GameDTO(game.getId(), game.getStatus(), game.getRedTurn(), game.getRedWin(), cardsDTOs);
     }
 }
 
