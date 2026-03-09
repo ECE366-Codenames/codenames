@@ -154,7 +154,7 @@ public class GameService {
                 card.getPosition()
         )).toList();
 
-        return new GameDTO(game.getId(), game.getStatus(), game.getRedTurn(), cardsDTOs);
+        return new GameDTO(game.getId(), game.getStatus(), game.getRedTurn(), game.getRedWin(), cardsDTOs);
     }
 }
 
