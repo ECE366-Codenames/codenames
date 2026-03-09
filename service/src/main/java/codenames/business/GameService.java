@@ -31,14 +31,19 @@ public class GameService {
     }
 
     public Long createGame() {
-
         Game game = new Game(Status.WAITING);
-        game.setRedTurn(true);
+        Game savedGame = gameRepository.save(game);
+        return savedGame.getId();
+    }
 
-        //once all 4 players have joined, proceed (not relevant in current form)
-        //in the future, should break into seperate methods: create game and start game
-
+    @Transactional
+    public Long startGame(Long gameId) {
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+        if (game.getStatus() != Status.WAITING) {
+            throw new RuntimeException("Game already started");
+        }
         game.setStatus(Status.STARTED);
+        game.setRedTurn(true);
 
         List<Word> words = wordRepository.getRandomWords(25);
         List<CardType> cardTypes = assignCardTypes();
@@ -52,10 +57,7 @@ public class GameService {
 
         game.setCards(cards);
 
-        Game savedGame = gameRepository.save(game);
-
-        return savedGame.getId();
-
+        return game.getId();
     }
 
     public Game getGameById(Long id) {
