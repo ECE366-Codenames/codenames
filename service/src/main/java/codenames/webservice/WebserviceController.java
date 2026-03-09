@@ -31,4 +31,14 @@ public class WebserviceController {
         gameService.guess(id, position);
     }
 
+    @PostMapping("/game/{id}/end")
+    public void endGame(@PathVariable Long id) {
+        gameService.abort(id);
+    }
+
+    @PostMapping("/game/{id}/cleanup")
+    public void cleanup(@PathVariable Long id) {
+        gameService.cleanup(id);
+    }
+
 }

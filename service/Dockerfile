@@ -6,3 +6,4 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:25-jre
 COPY --from=build /project/target /app/target
 ENTRYPOINT java -jar /app/target/codenames-0.0.1-SNAPSHOT.jar
+
