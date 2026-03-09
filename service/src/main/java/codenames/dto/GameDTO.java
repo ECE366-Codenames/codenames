@@ -6,11 +6,11 @@ import codenames.model.Status;
 public class GameDTO {
     private long id;
     private Status status;
-    private boolean redTurn;
-    private boolean redWin;
+    private Boolean redTurn;
+    private Boolean redWin;
     private List<CardDTO> cards;
 
-    public GameDTO(long id, Status status, boolean redTurn, boolean redWin, List<CardDTO> cards) {
+    public GameDTO(long id, Status status, Boolean redTurn, Boolean redWin, List<CardDTO> cards) {
         this.id = id;
         this.status = status;
         this.redTurn = redTurn;
@@ -24,11 +24,11 @@ public class GameDTO {
     public Status getStatus() {
         return status;
     }
-    public boolean isRedTurn() {
+    public Boolean isRedTurn() {
         return redTurn;
     }
 
-    public boolean redWin() {
+    public Boolean redWin() {
         return redWin;
     }
 
