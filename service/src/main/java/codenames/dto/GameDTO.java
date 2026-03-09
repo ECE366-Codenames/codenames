@@ -28,7 +28,7 @@ public class GameDTO {
         return redTurn;
     }
 
-    public Boolean redWin() {
+    public Boolean getRedWin() {
         return redWin;
     }
 
