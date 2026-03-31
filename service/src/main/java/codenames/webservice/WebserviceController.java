@@ -50,6 +50,4 @@ public class WebserviceController {
         gameService.cleanup(id);
     }
 
-
-
 }

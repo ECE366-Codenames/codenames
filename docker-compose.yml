@@ -1,7 +1,7 @@
 services:
-  db:
-    image: postgres:15
-    container_name: codenames_db
+  codenames_db:
+    image: codenames.azurecr.io/postgres:latest
+    build: database
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -22,4 +22,4 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - codenames_db
