@@ -47,7 +47,7 @@ public class PlayerService {
         // initialize defaults
         player.setWins(0);
         player.setLosses(0);
-        player.setOnline(false);
+        player.setIsOnline(false);
 
         return playerRepository.save(player).getId();
     }
