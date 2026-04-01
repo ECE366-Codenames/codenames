@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class WebserviceController {
     private final GameService gameService;
+    private final PlayerService playerService;
 
-    public WebserviceController(GameService gameService) {
+    public WebserviceController(GameService gameService, PlayerService playerService) {
         this.gameService = gameService;
+        this.playerService = playerService;
     }
 
     @GetMapping("/game/{id}") // returns game with id
@@ -25,14 +27,10 @@ public class WebserviceController {
     public Long createGame() {
         return gameService.createGame();
     }
-
-    //add: add player to game
     
     @PostMapping("/game/{id}/start") // begins game
     public Long startGame(@PathVariable Long id) {
-        //add: check if enough players have joined
         return gameService.startGame(id);
-        //add: assign roles to players 
     }
 
     @PostMapping("/game/{id}/guess/{position}") // guesses word at position, sets that card as revealed and updates turn
@@ -48,6 +46,16 @@ public class WebserviceController {
     @PostMapping("/game/{id}/cleanup")
     public void cleanup(@PathVariable Long id) {
         gameService.cleanup(id);
+    }
+
+    @PostMapping("/player")
+    public Long createPlayer(@RequestBody PlayerDTO dto) {
+        return playerService.createPlayer(dto);
+    }
+
+    @PostMapping("/game/{id}/join")
+    public Long joinGame(@PathVariable Long id, @RequestParam Long playerId) {
+        return playerService.addPlayerToGame(id, playerId);
     }
 
 

@@ -1,7 +1,7 @@
 CREATE TABLE player (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE,
     password_hash TEXT NOT NULL,
     wins INTEGER DEFAULT 0,
     losses INTEGER DEFAULT 0,
@@ -23,11 +23,11 @@ CREATE TABLE game (
 );
 
 CREATE TABLE game_players (
+    id BIGSERIAL PRIMARY KEY,
     game_id BIGINT REFERENCES game(id),
     player_id BIGINT REFERENCES player(id),
     is_red BOOLEAN, -- true for red, false for blue
-    is_spymaster BOOLEAN, -- true for spymaster, false for field agent
-    PRIMARY KEY (game_id, player_id)
+    is_spymaster BOOLEAN -- true for spymaster, false for field agent
 );
 
 CREATE TABLE word (

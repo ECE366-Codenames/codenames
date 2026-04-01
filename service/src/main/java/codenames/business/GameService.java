@@ -13,6 +13,9 @@ import codenames.repository.WordRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codenames.model.GamePlayer;
+import codenames.repository.GamePlayerRepository;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
