@@ -1,6 +1,8 @@
 package codenames.repository;
 
 import codenames.model.GamePlayer;
+import codenames.model.Game;
+import codenames.model.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
