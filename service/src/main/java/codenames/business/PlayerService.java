@@ -9,8 +9,7 @@ import codenames.repository.PlayerRepository;
 import codenames.repository.GameRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 
@@ -19,8 +18,6 @@ public class PlayerService {
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
     private final GamePlayerRepository gamePlayerRepository;
-
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public PlayerService(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository) {
         this.playerRepository = playerRepository;
@@ -41,7 +38,7 @@ public class PlayerService {
         player.setUsername(dto.getUsername());
         player.setEmail(dto.getEmail());
         
-        String hashed = passwordEncoder.encode(dto.getPassword());
+        String hashed = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt());
         player.setPasswordHash(hashed);
 
         // initialize defaults
