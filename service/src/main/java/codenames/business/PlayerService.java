@@ -17,11 +17,15 @@ import java.util.List;
 @Service
 public class PlayerService {
     private final PlayerRepository playerRepository;
+    private final GameRepository gameRepository;
+    private final GamePlayerRepository gamePlayerRepository;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerService(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository) {
         this.playerRepository = playerRepository;
+        this.gameRepository = gameRepository;
+        this.gamePlayerRepository = gamePlayerRepository;
     }
 
     @Transactional
