@@ -13,6 +13,7 @@ services:
       - ./database:/docker-entrypoint-initdb.d
 
   app:
+    image: codenames.azurecr.io/service:latest
     build: service
     environment:
       - POSTGRES_DB=postgres

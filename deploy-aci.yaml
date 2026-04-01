@@ -1,0 +1,60 @@
+apiVersion: 2019-12-01
+location: eastus
+name: fullStackContainerGroup
+properties:
+  containers:
+    - name: codenames-db
+      properties:
+        image: codenames.azurecr.io/postgres:latest
+        environmentVariables:
+          - name: POSTGRES_USER
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: postgres
+          - name: POSTGRES_DB
+            value: codenames
+        resources:
+          requests:
+            cpu: 1
+            memoryInGb: 1.5
+        ports:
+          - port: 5432
+    - name: app
+      properties:
+        image: codenames.azurecr.io/service:latest
+        environmentVariables:
+          - name: POSTGRES_DB
+            value: postgres
+          - name: POSTGRES_PASSWORD
+            value: postgres
+        resources:
+          requests:
+            cpu: 1
+            memoryInGb: 1.5
+        ports:
+          - port: 8080
+#    - name: ui
+#      properties:
+#        image: myacr.azurecr.io/rpsui:latest
+#        resources:
+#          requests:
+#            cpu: 1
+#            memoryInGb: 1.5
+#        ports:
+#          - port: 80
+  osType: Linux
+  ipAddress:
+    type: Public
+    dnsNameLabel: codenames
+    ports:
+      - protocol: tcp
+        port: 5432
+      - protocol: tcp
+        port: 8080
+#      - protocol: tcp
+#        port: 80
+  imageRegistryCredentials:
+    - server: codenames.azurecr.io
+      username: codenames
+      password:
+type: Microsoft.ContainerInstance/containerGroups
