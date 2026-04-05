@@ -1,7 +1,7 @@
 CREATE TABLE player (
     id BIGSERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE,
+    email VARCHAR(100) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     wins INTEGER DEFAULT 0,
     losses INTEGER DEFAULT 0,

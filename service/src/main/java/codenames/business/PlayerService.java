@@ -1,6 +1,7 @@
 package codenames.business;
 
 import codenames.dto.PlayerDTO;
+import codenames.dto.PlayerInitDTO;
 import codenames.model.Player;
 import codenames.model.GamePlayer;
 import codenames.model.Game;
@@ -26,12 +27,15 @@ public class PlayerService {
     }
 
     @Transactional
-    public Long createPlayer(PlayerDTO dto) {
+    public Long createPlayer(PlayerInitDTO dto) {
         if (dto.getUsername() == null || dto.getUsername().isBlank()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
         if (dto.getPassword() == null || dto.getPassword().isBlank()) {
             throw new IllegalArgumentException("Password cannot be empty");
+        }
+        if (dto.getEmail() == null || dto.getEmail().isBlank()) {
+            throw new IllegalArgumentException("Email cannot be empty");
         }
 
         Player player = new Player();

@@ -4,6 +4,7 @@ import codenames.business.GameService;
 import codenames.business.PlayerService;
 import codenames.dto.GameDTO;
 import codenames.dto.PlayerDTO;
+import codenames.dto.PlayerInitDTO;
 import codenames.model.Game;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,7 +52,7 @@ public class WebserviceController {
     }
 
     @PostMapping("/player")
-    public Long createPlayer(@RequestBody PlayerDTO dto) {
+    public Long createPlayer(@RequestBody PlayerInitDTO dto) {
         return playerService.createPlayer(dto);
     }
 
@@ -59,7 +60,5 @@ public class WebserviceController {
     public Long joinGame(@PathVariable Long id, @RequestParam Long playerId) {
         return playerService.addPlayerToGame(id, playerId);
     }
-
-
 
 }
