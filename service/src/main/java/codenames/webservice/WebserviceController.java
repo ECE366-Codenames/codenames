@@ -31,7 +31,7 @@ public class WebserviceController {
         return gameService.createGame();
     }
     
-    @PostMapping("/game/{id}/start") // begins game
+    @PostMapping("/game/{id}/start") // begins game & initializes player roles
     public Long startGame(@PathVariable Long id) {
         return gameService.startGame(id);
     }
@@ -51,12 +51,12 @@ public class WebserviceController {
         gameService.cleanup(id);
     }
 
-    @PostMapping("/player")
+    @PostMapping("/player") //the username, password, and email of a new player go in the body of the request in JSON format
     public Long createPlayer(@RequestBody PlayerInitDTO dto) {
-        return playerService.createPlayer(dto);
+        return playerService.createPlayer(dto); 
     }
 
-    @PostMapping("/game/{id}/join")
+    @PostMapping("/game/{id}/join") //the player Id is a request parameter
     public Long joinGame(@PathVariable Long id, @RequestParam Long playerId) {
         return playerService.addPlayerToGame(id, playerId);
     }
