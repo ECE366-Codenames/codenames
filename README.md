@@ -7,8 +7,19 @@ Start the database:
 docker compose build
 docker compose up
 ```
+Run the React App in Browser:
+```
+cd frontend
+npm run dev
+```
 
-## In Postman
+## To deploy to Azure:
+Run the shell script (container instance muse be running):
+```
+./deploy.sh
+```
+
+## OR: In Postman
 
 To get information about a specific game:
 ```
