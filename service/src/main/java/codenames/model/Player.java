@@ -1,7 +1,6 @@
 package codenames.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "player")
@@ -17,7 +16,7 @@ public class Player {
     private String email;
 
     @Column(name = "password_hash")
-    private String password_hash;
+    private String passwordHash;
 
     @Column(name = "wins")
     private int wins;
@@ -26,7 +25,7 @@ public class Player {
     private int losses;
 
     @Column(name = "is_online")
-    private Boolean is_online;
+    private Boolean isOnline;
 
     public Player() {}
 
@@ -37,12 +36,15 @@ public class Player {
     public Long getId() { return id; }
     public String getUsername() { return username; }
     public String getEmail() { return email; }
-    public String getPassword_hash() { return password_hash; }
+    public String getPasswordHash() { return passwordHash; }
     public int getWins() { return wins; }
     public int getLosses() { return losses; }
-    public Boolean getIs_online() { return is_online; }
+    public Boolean getIsOnline() { return isOnline; }
 
     public void setWins(int wins) { this.wins = wins; }
-    public void setRedTurn(int losses) { this.losses = losses; }
-    public void setIs_online(Boolean is_online) { this.is_online = is_online; }
+    public void setLosses(int losses) { this.losses = losses; }
+    public void setUsername(String username) { this.username = username; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public void setIsOnline(Boolean isOnline) { this.isOnline = isOnline; }
 }

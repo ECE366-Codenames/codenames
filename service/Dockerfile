@@ -1,7 +1,7 @@
 FROM maven:3-eclipse-temurin-25 AS build
 ADD . /project
 WORKDIR /project
-RUN mvn -e package
+RUN mvn -X -e package
 
 FROM eclipse-temurin:25-jre
 COPY --from=build /project/target /app/target

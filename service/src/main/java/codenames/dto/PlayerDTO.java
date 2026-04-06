@@ -4,19 +4,19 @@ public class PlayerDTO {
     private long id;
     private String username;
     private String email;
-    private String password_hash;
     private int wins;
     private int losses;
-    private boolean is_online;
+    private boolean isOnline;
+    private String password; // only used for creating new player, not stored in db
 
-    public PlayerDTO(long id, String username, String email, String password_hash, int wins, int losses, Boolean is_online) {
+    public PlayerDTO(long id, String username, String email, String passwordHash, int wins, int losses, Boolean isOnline, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
-        this.password_hash = password_hash;
         this.wins = wins;
         this.losses = losses;
-        this.is_online = is_online;
+        this.isOnline = isOnline;
+        this.password = password;
     }
 
     public long getId() {
@@ -30,10 +30,6 @@ public class PlayerDTO {
         return email;
     }
 
-    public String getPassword_hash() {
-        return password_hash;
-    }
-
     public int getWins() {
         return wins;
     }
@@ -43,7 +39,11 @@ public class PlayerDTO {
     }
 
     public Boolean isOnline() {
-        return is_online;
+        return isOnline;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
 }
