@@ -12,6 +12,7 @@ Run the React App in Browser:
 cd frontend
 npm run dev
 ```
+Then ```o + enter``` to open in browser
 
 ## To deploy to Azure:
 Run the shell script (container instance muse be running):
