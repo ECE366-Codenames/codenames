@@ -26,3 +26,11 @@ services:
       - "8080:8080"
     depends_on:
       - codenames_db
+
+  frontend:
+    image: codenames.azurecr.io/frontend:latest
+    build: frontend
+    expose:
+      - "80"
+    ports:
+      - "80:80"

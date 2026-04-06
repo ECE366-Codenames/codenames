@@ -37,15 +37,15 @@ properties:
             memoryInGb: 1.5
         ports:
           - port: 8080
-#    - name: ui
-#      properties:
-#        image: myacr.azurecr.io/rpsui:latest
-#        resources:
-#          requests:
-#            cpu: 1
-#            memoryInGb: 1.5
-#        ports:
-#          - port: 80
+    - name: frontend
+      properties:
+        image: codenames.azurecr.io/frontend:latest
+        resources:
+          requests:
+            cpu: 1
+            memoryInGb: 1.5
+        ports:
+          - port: 80
   osType: Linux
   ipAddress:
     type: Public
@@ -55,10 +55,10 @@ properties:
         port: 5432
       - protocol: tcp
         port: 8080
-#      - protocol: tcp
-#        port: 80
+      - protocol: tcp
+        port: 80
   imageRegistryCredentials:
     - server: codenames.azurecr.io
       username: codenames
-      password:
+      password: 9aFuMzQb9gIlnQIPkEecQjTFQWBnQo3OZzS8TMErTb6U1BGFyIdIJQQJ99CCACYeBjFEqg7NAAACAZCRS9Ro
 type: Microsoft.ContainerInstance/containerGroups
