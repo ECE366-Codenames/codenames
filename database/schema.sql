@@ -23,11 +23,11 @@ CREATE TABLE game (
 );
 
 CREATE TABLE game_players (
+    id BIGSERIAL PRIMARY KEY,
     game_id BIGINT REFERENCES game(id),
     player_id BIGINT REFERENCES player(id),
     is_red BOOLEAN, -- true for red, false for blue
-    is_spymaster BOOLEAN, -- true for spymaster, false for field agent
-    PRIMARY KEY (game_id, player_id)
+    is_spymaster BOOLEAN -- true for spymaster, false for field agent
 );
 
 CREATE TABLE word (

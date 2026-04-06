@@ -13,6 +13,9 @@ import codenames.repository.WordRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codenames.model.GamePlayer;
+import codenames.repository.GamePlayerRepository;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +26,13 @@ public class GameService {
     private final GameRepository gameRepository;
     private final WordRepository wordRepository;
     private final GameCardRepository gameCardRepository;
+    private final GamePlayerRepository gamePlayerRepository;
 
-    public GameService(GameRepository gameRepository, WordRepository wordRepository, GameCardRepository gameCardRepository) {
+    public GameService(GameRepository gameRepository, WordRepository wordRepository, GameCardRepository gameCardRepository, GamePlayerRepository gamePlayerRepository) {
         this.gameRepository = gameRepository;
         this.wordRepository = wordRepository;
         this.gameCardRepository = gameCardRepository;
+        this.gamePlayerRepository = gamePlayerRepository;
     }
 
     public Long createGame() {
@@ -42,6 +47,24 @@ public class GameService {
         if (game.getStatus() != Status.WAITING) {
             throw new RuntimeException("Game already started");
         }
+
+        List<GamePlayer> players = gamePlayerRepository.findByGame(game);
+        if (players.size() != 4) {
+            throw new IllegalStateException("Not enough players in game");
+        }
+
+        for (int i = 0; i < players.size(); i++) {
+            GamePlayer gp = players.get(i);
+
+            if (i < 2) { 
+                gp.setRed(true);          
+                gp.setSpymaster(i == 0);  
+            } else {
+                gp.setRed(false);          
+                gp.setSpymaster(i == 2);  
+            }
+        }
+
         game.setStatus(Status.STARTED);
         game.setRedTurn(true);
 

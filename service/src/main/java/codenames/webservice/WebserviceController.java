@@ -1,7 +1,10 @@
 package codenames.webservice;
 
 import codenames.business.GameService;
+import codenames.business.PlayerService;
 import codenames.dto.GameDTO;
+import codenames.dto.PlayerDTO;
+import codenames.dto.PlayerInitDTO;
 import codenames.model.Game;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:5173", "http://codenames.eastus.azurecontainer.io"})
 public class WebserviceController {
     private final GameService gameService;
+    private final PlayerService playerService;
 
-    public WebserviceController(GameService gameService) {
+    public WebserviceController(GameService gameService, PlayerService playerService) {
         this.gameService = gameService;
+        this.playerService = playerService;
     }
 
     @GetMapping("/game/{id}") // returns game with id
@@ -26,14 +31,10 @@ public class WebserviceController {
     public Long createGame() {
         return gameService.createGame();
     }
-
-    //add: add player to game
     
-    @PostMapping("/game/{id}/start") // begins game
+    @PostMapping("/game/{id}/start") // begins game & initializes player roles
     public Long startGame(@PathVariable Long id) {
-        //add: check if enough players have joined
         return gameService.startGame(id);
-        //add: assign roles to players 
     }
 
     @PostMapping("/game/{id}/guess/{position}") // guesses word at position, sets that card as revealed and updates turn
@@ -49,6 +50,16 @@ public class WebserviceController {
     @PostMapping("/game/{id}/cleanup")
     public void cleanup(@PathVariable Long id) {
         gameService.cleanup(id);
+    }
+
+    @PostMapping("/player") //the username, password, and email of a new player go in the body of the request in JSON format
+    public Long createPlayer(@RequestBody PlayerInitDTO dto) {
+        return playerService.createPlayer(dto);
+    }
+
+    @PostMapping("/game/{id}/join") //the player Id is a request parameter
+    public Long joinGame(@PathVariable Long id, @RequestParam Long playerId) {
+        return playerService.addPlayerToGame(id, playerId);
     }
 
 }
