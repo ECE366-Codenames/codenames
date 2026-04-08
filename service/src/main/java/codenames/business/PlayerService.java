@@ -1,5 +1,6 @@
 package codenames.business;
 
+import codenames.dto.GamePlayerDTO;
 import codenames.dto.PlayerDTO;
 import codenames.dto.PlayerInitDTO;
 import codenames.model.Player;
@@ -78,6 +79,22 @@ public class PlayerService {
     public Player getPlayerById(Long id) {
         return playerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+    }
+
+    public List<GamePlayerDTO> getPlayersByGameId(Long gameId){
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
+
+        List<GamePlayer> gamePlayers = gamePlayerRepository.findByGame(game);
+
+        return gamePlayers.stream()
+                .map(gp -> new GamePlayerDTO(
+                        gp.getPlayer().getId(),
+                        gp.getPlayer().getUsername(),
+                        gp.isRed(),
+                        gp.isSpymaster()
+                ))
+                .toList();
     }
 
 }

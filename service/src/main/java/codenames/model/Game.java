@@ -26,6 +26,19 @@ public class Game {
     @Column(name = "red_win")
     private Boolean redWin;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "turn_phase")
+    private TurnPhase turnPhase;
+
+    @Column(name = "clue_word")
+    private String clueWord;
+
+    @Column(name = "clue_number")
+    private int clueNumber;
+
+    @Column(name = "guesses_remaining")
+    private int guessesRemaining;
+
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
     private List<GameCard> cards;
 
@@ -39,6 +52,8 @@ public class Game {
     public Game(Status status) {
         this.status = status;
         this.createdAt = LocalDateTime.now();
+        this.redTurn = true;
+        this.turnPhase = TurnPhase.CLUE;
     }
 
     public Long getId() { return id; }

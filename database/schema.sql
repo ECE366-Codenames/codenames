@@ -15,11 +15,15 @@ CREATE TABLE friendship (
 );
 
 CREATE TABLE game (
-  id BIGSERIAL PRIMARY KEY,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  status VARCHAR(20) DEFAULT 'waiting', --waiting, started, complete (enforce in backend)
-  red_turn BOOLEAN DEFAULT true, --red goes first
-  red_win BOOLEAN --1 for red, 0 for blue
+    id BIGSERIAL PRIMARY KEY,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) DEFAULT 'waiting', --waiting, started, complete (enforce in backend)
+    red_turn BOOLEAN DEFAULT true, --red goes first
+    red_win BOOLEAN, --1 for red, 0 for blue
+    turn_phase VARCHAR(20) DEFAULT 'clue', --clue or guess
+    clue_word VARCHAR(20),
+    clue_number INTEGER,
+    guesses_remaining INTEGER
 );
 
 CREATE TABLE game_players (

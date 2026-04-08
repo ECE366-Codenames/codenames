@@ -20,5 +20,15 @@ export const api = {
         await fetch(`${API_URL}/game/${id}/guess/${position}`, {
             method: 'POST',
         });
+    },
+    joinGame: async (gameId, playerId) => {
+        const response = await fetch(`${API_URL}/game/${gameId}/join?playerId=${playerId}`, {
+            method: 'POST',
+        });
+        return response.json();
+    },
+    getPlayers: async (gameId) => {
+        const response = await fetch(`${API_URL}/game/${gameId}/players`);
+        return response.json();
     }
 }

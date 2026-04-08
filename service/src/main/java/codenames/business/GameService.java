@@ -74,7 +74,7 @@ public class GameService {
         List<GameCard> cards = new ArrayList<>();
 
         for (int i = 0; i < words.size(); i++) {
-            GameCard card = new GameCard(game, words.get(i), cardTypes.get(i), i+1);
+            GameCard card = new GameCard(game, words.get(i), cardTypes.get(i), i);
             cards.add(card);
         }
 

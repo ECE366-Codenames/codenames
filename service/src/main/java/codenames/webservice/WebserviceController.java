@@ -3,10 +3,13 @@ package codenames.webservice;
 import codenames.business.GameService;
 import codenames.business.PlayerService;
 import codenames.dto.GameDTO;
+import codenames.dto.GamePlayerDTO;
 import codenames.dto.PlayerDTO;
 import codenames.dto.PlayerInitDTO;
 import codenames.model.Game;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:5173", "http://codenames.eastus.azurecontainer.io"})
@@ -60,6 +63,11 @@ public class WebserviceController {
     @PostMapping("/game/{id}/join") //the player Id is a request parameter
     public Long joinGame(@PathVariable Long id, @RequestParam Long playerId) {
         return playerService.addPlayerToGame(id, playerId);
+    }
+
+    @GetMapping("/game/{id}/players")
+    public List<GamePlayerDTO> getPlayers(@PathVariable Long id) {
+        return playerService.getPlayersByGameId(id);
     }
 
 }
