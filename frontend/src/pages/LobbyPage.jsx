@@ -1,36 +1,50 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 function LobbyPage() {
-    const [gameId, setGameId] = useState('');
+    const { playerId } = useAuth();
+    const { gameId } = useParams();
     const [game, setGame] = useState(null);
-    const [playerId, setPlayerId] = useState('');
     const [spymasterMode, setSpymasterMode] = useState(false);
     const [players, setPlayers] = useState([]);
     const navigate = useNavigate();
+    const hasJoined = useRef(false);
+
+    useEffect(() => {
+        const joinAndLoadGame = async () => {
+            if (playerId && gameId && !hasJoined.current) {
+                hasJoined.current = true;
+                try {
+                    await api.joinGame(gameId, playerId);
+                } catch (error) {
+                    console.error('Error joining game:', error);
+                }
+                await loadPlayers();
+            } else if (playerId && gameId) {
+                await loadPlayers();
+            }
+        };
+        joinAndLoadGame();
+    }, [playerId, gameId]);
+
+    const loadPlayers = async () => {
+        const playerList = await api.getPlayers(gameId);
+        setPlayers(playerList);
+    };
 
     const handleStartGame = async () => {
         await api.startGame(gameId);
-        await loadGame(gameId);
+        navigate(`/game/${gameId}`);
     };
-
-    const getGameId = async () => {
-        await api.getGame()
-    }
 
     return (
         <div className="lobby-page">
         <h2>Lobby</h2>
         <div className="controls">
             <p>Game ID: {gameId}</p>
-
-            <input
-                type="number"
-                placeholder="Player ID"
-                value={playerId || ''}
-                onChange={(e) => setPlayerId(e.target.value)}
-            />
+            <p>Your Player ID: {playerId}</p>  {/* Show but don't edit */}
 
             <button onClick={handleStartGame}>Start Game</button>
             <label>

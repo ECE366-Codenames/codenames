@@ -25,10 +25,22 @@ export const api = {
         const response = await fetch(`${API_URL}/game/${gameId}/join?playerId=${playerId}`, {
             method: 'POST',
         });
-        return response.json();
+        return response.text();
     },
     getPlayers: async (gameId) => {
         const response = await fetch(`${API_URL}/game/${gameId}/players`);
         return response.json();
+    },
+    createOrGetPlayer: async (firebaseUid, email, username) => {
+        const response = await fetch(`${API_URL}/player/auth`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                firebaseUid: firebaseUid,
+                email: email,
+                username: username
+            }),
+        });
+        return response.text();
     }
 }

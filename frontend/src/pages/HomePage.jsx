@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 function HomePage() {
     const [joinGameId, setJoinGameId] = useState('');
+    const { currentUser, playerId } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!currentUser) {
+            navigate('/auth');
+        }
+    }, [currentUser, navigate]);
 
     const createNewGame = async () => {
         try {
