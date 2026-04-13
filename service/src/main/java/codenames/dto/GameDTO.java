@@ -2,6 +2,7 @@ package codenames.dto;
 
 import java.util.List;
 import codenames.model.Status;
+import codenames.model.TurnPhase;
 
 public class GameDTO {
     private long id;
@@ -9,6 +10,10 @@ public class GameDTO {
     private Boolean redTurn;
     private Boolean redWin;
     private List<CardDTO> cards;
+    private TurnPhase turnPhase;
+    private String clueWord;
+    private int clueNumber;
+    private int guessesRemaining;
 
     public GameDTO(long id, Status status, Boolean redTurn, Boolean redWin, List<CardDTO> cards) {
         this.id = id;

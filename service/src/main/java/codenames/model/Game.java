@@ -62,9 +62,17 @@ public class Game {
     public Boolean getRedWin() { return redWin; }
     public Boolean getRedTurn() { return redTurn; }
     public List<GameCard> getCards() { return cards; }
+    public TurnPhase getTurnPhase() { return turnPhase; }
+    public String getClueWord() { return clueWord; }
+    public int getClueNumber() { return clueNumber; }
+    public int getGuessesRemaining() { return guessesRemaining; }
 
     public void setStatus(Status status) { this.status = status; }
     public void setRedTurn(Boolean redTurn) { this.redTurn = redTurn; }
     public void setRedWin(Boolean redWin) { this.redWin = redWin; }
     public void setCards(List<GameCard> cards) { this.cards = cards; }
+    public void setTurnPhase(TurnPhase turnPhase) { this.turnPhase = turnPhase; }
+    public void setClueWord(String clueWord) { this.clueWord = clueWord; }
+    public void setClueNumber(int clueNumber) { this.clueNumber = clueNumber; }
+    public void setGuessesRemaining(int guessesRemaining) { this.guessesRemaining = guessesRemaining; }
 }

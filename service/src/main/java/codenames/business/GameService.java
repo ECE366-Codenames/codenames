@@ -2,18 +2,13 @@ package codenames.business;
 
 import codenames.dto.CardDTO;
 import codenames.dto.GameDTO;
-import codenames.model.CardType;
-import codenames.model.Game;
-import codenames.model.GameCard;
-import codenames.model.Status;
-import codenames.model.Word;
+import codenames.model.*;
 import codenames.repository.GameCardRepository;
 import codenames.repository.GameRepository;
 import codenames.repository.WordRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codenames.model.GamePlayer;
 import codenames.repository.GamePlayerRepository;
 
 import java.util.ArrayList;
@@ -102,6 +97,15 @@ public class GameService {
     @Transactional
     public void guess(Long gameId, int position) {
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+
+        if(game.getStatus() != Status.STARTED){
+            throw new RuntimeException("Game not started");
+        }
+
+        if(game.getTurnPhase() != TurnPhase.GUESS){
+            throw new RuntimeException("Not guessing phase");
+        }
+
         GameCard card = gameCardRepository.findByGameIdAndPosition(gameId, position).orElseThrow(() -> new RuntimeException("Card not found"));
 
         if (card.isRevealed()) {
@@ -109,23 +113,28 @@ public class GameService {
         }
 
         card.setRevealed(true);
+        game.setGuessesRemaining(game.getGuessesRemaining() - 1);
+
+        boolean endTurn = false;
 
         switch (card.getCardType()) {
             case ASSASSIN:
                 game.setRedWin(!game.getRedTurn());
                 game.setStatus(Status.COMPLETE);
-                break;
+                return;
             case NEUTRAL:
-                game.setRedTurn(!game.getRedTurn());
+                endTurn = true;
                 break;
             case RED:
                 if (!game.getRedTurn()) {
-                    game.setRedTurn(true);
+                    // Red team guessed blue, switch turns
+                    endTurn = true;
                 }
                 break;
             case BLUE:
                 if (game.getRedTurn()) {
-                    game.setRedTurn(false);
+                    // Blue team guessed red, switch turns
+                    endTurn = true;
                 }
                 break;
 
@@ -133,7 +142,17 @@ public class GameService {
 
         checkWinCondition(game);
 
+        if (endTurn || game.getGuessesRemaining() == 0) {
+            game.setRedTurn(!game.getRedTurn());
+            game.setTurnPhase(TurnPhase.CLUE);
+            game.setClueWord(null);
+            game.setClueNumber(0);
+            game.setGuessesRemaining(0);
+        }
+
     }
+
+
 
     private void checkWinCondition(Game game) {
         long redRemaining = game.getCards().stream().filter(c -> c.getCardType() == CardType.RED && !c.isRevealed()).count();
@@ -146,6 +165,19 @@ public class GameService {
             game.setStatus(Status.COMPLETE);
             game.setRedWin(false);
         }
+    }
+
+    @Transactional
+    public void submitClue(Long gameId, String clueWord, int clueNumber) {
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
+
+        if(game.getTurnPhase() != TurnPhase.CLUE){
+            throw new RuntimeException("Not in clue phase");
+        }
+        game.setClueWord(clueWord);
+        game.setClueNumber(clueNumber);
+        game.setGuessesRemaining(clueNumber + 1);
+        game.setTurnPhase(TurnPhase.GUESS);
     }
 
     @Transactional
