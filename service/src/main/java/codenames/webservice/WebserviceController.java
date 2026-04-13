@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173", "http://codenames.eastus.azurecontainer.io"})
+@CrossOrigin(origins = {"http://localhost", "http://localhost:5173", "http://codenames.eastus.azurecontainer.io"})
 public class WebserviceController {
     private final GameService gameService;
     private final PlayerService playerService;
