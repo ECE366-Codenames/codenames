@@ -1,7 +1,7 @@
 services:
-  db:
-    image: postgres:15
-    container_name: codenames_db
+  codenames_db:
+    image: codenames.azurecr.io/postgres:latest
+    build: database
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -13,13 +13,24 @@ services:
       - ./database:/docker-entrypoint-initdb.d
 
   app:
+    image: codenames.azurecr.io/service:latest
     build: service
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_PASSWORD=password
+      - DB_HOST=codenames_db
+      - POSTGRES_DB=codenames
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     expose:
       - "8080"
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - codenames_db
+
+  frontend:
+    image: codenames.azurecr.io/frontend:latest
+    build: frontend
+    expose:
+      - "80"
+    ports:
+      - "80:80"

@@ -9,6 +9,7 @@ import codenames.model.Game;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:5173", "http://codenames.eastus.azurecontainer.io"})
 public class WebserviceController {
     private final GameService gameService;
     private final PlayerService playerService;
@@ -53,7 +54,7 @@ public class WebserviceController {
 
     @PostMapping("/player") //the username, password, and email of a new player go in the body of the request in JSON format
     public Long createPlayer(@RequestBody PlayerInitDTO dto) {
-        return playerService.createPlayer(dto); 
+        return playerService.createPlayer(dto);
     }
 
     @PostMapping("/game/{id}/join") //the player Id is a request parameter
