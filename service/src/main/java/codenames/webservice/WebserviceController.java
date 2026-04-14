@@ -72,4 +72,14 @@ public class WebserviceController {
         return playerService.createOrGetPlayer(dto.getFirebaseUid(), dto.getEmail(), dto.getUsername());
     }
 
+    @PostMapping("/game/{id}/clue")
+    public void submitClue(@PathVariable Long id, @RequestBody ClueDTO dto) {
+        gameService.submitClue(id, dto.getWord(), dto.getNumber());
+    }
+
+    @PostMapping("/game/{id}/pass")
+    public void passTurn(@PathVariable Long id) {
+        gameService.passTurn(id);
+    }
+
 }

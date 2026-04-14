@@ -35,12 +35,20 @@ export const api = {
         const response = await fetch(`${API_URL}/player/auth`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                firebaseUid: firebaseUid,
-                email: email,
-                username: username
-            }),
+            body: JSON.stringify({firebaseUid, email, username}),
         });
         return response.text();
+    },
+    submitClue: async (gameId, word, number) => {
+        await fetch(`${API_URL}/game/${gameId}/clue`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({word, number}),
+        });
+    },
+    passTurn: async (gameId) => {
+        await fetch(`${API_URL}/game/${gameId}/pass`, {
+            method: 'POST',
+        });
     }
 }

@@ -152,7 +152,16 @@ public class GameService {
 
     }
 
+    @Transactional
+    public void passTurn(Long gameId) {
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
 
+        game.setRedTurn(!game.getRedTurn());
+        game.setTurnPhase(TurnPhase.CLUE);
+        game.setClueWord(null);
+        game.setClueNumber(0);
+        game.setGuessesRemaining(0);
+    }
 
     private void checkWinCondition(Game game) {
         long redRemaining = game.getCards().stream().filter(c -> c.getCardType() == CardType.RED && !c.isRevealed()).count();
@@ -211,7 +220,17 @@ public class GameService {
                 card.getPosition()
         )).toList();
 
-        return new GameDTO(game.getId(), game.getStatus(), game.getRedTurn(), game.getRedWin(), cardsDTOs);
+        return new GameDTO(
+                game.getId(),
+                game.getStatus(),
+                game.getRedTurn(),
+                game.getRedWin(),
+                cardsDTOs,
+                game.getTurnPhase(),
+                game.getClueWord(),
+                game.getClueNumber(),
+                game.getGuessesRemaining()
+        );
     }
 }
 
