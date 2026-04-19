@@ -9,7 +9,7 @@ export default function Card({card, onGuess, revealed}) {
 
     const getCardClass = () => {
         if (!revealed) return 'card';
-        return `card card-${card.color.toLowerCase()}`
+        return `card card-${card.color}`
     };
 
     return (

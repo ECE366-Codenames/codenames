@@ -1,5 +1,6 @@
 package codenames.business;
 
+import codenames.dto.GamePlayerDTO;
 import codenames.dto.PlayerDTO;
 import codenames.dto.PlayerInitDTO;
 import codenames.model.Player;
@@ -10,8 +11,6 @@ import codenames.repository.PlayerRepository;
 import codenames.repository.GameRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.util.List;
 
 @Service
@@ -27,41 +26,33 @@ public class PlayerService {
     }
 
     @Transactional
-    public Long createPlayer(PlayerInitDTO dto) {
-        if (dto.getUsername() == null || dto.getUsername().isBlank()) {
-            throw new IllegalArgumentException("Username cannot be empty");
-        }
-        if (dto.getPassword() == null || dto.getPassword().isBlank()) {
-            throw new IllegalArgumentException("Password cannot be empty");
-        }
-        if (dto.getEmail() == null || dto.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Email cannot be empty");
-        }
+    public String createOrGetPlayer(String firebaseUid, String email, String username) {
+        // Check if player already exists
+        return playerRepository.findById(firebaseUid)
+                .map(Player::getId)
+                .orElseGet(() -> {
+                    // Create new player with Firebase UID as ID
+                    Player player = new Player();
+                    player.setId(firebaseUid);
+                    player.setEmail(email);
+                    player.setUsername(username != null ? username : email.split("@")[0]);
+                    player.setWins(0);
+                    player.setLosses(0);
+                    player.setIsOnline(true);
 
-        Player player = new Player();
-        player.setUsername(dto.getUsername());
-        player.setEmail(dto.getEmail());
-        
-        String hashed = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt());
-        player.setPasswordHash(hashed);
-
-        // initialize defaults
-        player.setWins(0);
-        player.setLosses(0);
-        player.setIsOnline(false);
-
-        return playerRepository.save(player).getId();
+                    return playerRepository.save(player).getId();
+                });
     }
 
     @Transactional
-    public Long addPlayerToGame(Long gameId, Long playerId) {
+    public String addPlayerToGame(Long gameId, String playerId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("Game not found"));
         Player player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new IllegalArgumentException("Player not found"));
 
         if (gamePlayerRepository.existsByGameAndPlayer(game, player)) {
-            throw new IllegalArgumentException("Player already in game");
+            return playerId;
         }
 
         List<GamePlayer> players = gamePlayerRepository.findByGame(game);
@@ -71,13 +62,30 @@ public class PlayerService {
         }
 
         GamePlayer gp = new GamePlayer(game, player);
-        return gamePlayerRepository.save(gp).getId();
+        gamePlayerRepository.save(gp);
+        return playerId;
     }
 
     @Transactional(readOnly = true)
-    public Player getPlayerById(Long id) {
+    public Player getPlayerById(String id) {
         return playerRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Player not found"));
+    }
+
+    public List<GamePlayerDTO> getPlayersByGameId(Long gameId){
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
+
+        List<GamePlayer> gamePlayers = gamePlayerRepository.findByGame(game);
+
+        return gamePlayers.stream()
+                .map(gp -> new GamePlayerDTO(
+                        gp.getPlayer().getId(),
+                        gp.getPlayer().getUsername(),
+                        gp.isRed(),
+                        gp.isSpymaster()
+                ))
+                .toList();
     }
 
 }

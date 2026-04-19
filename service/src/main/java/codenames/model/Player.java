@@ -6,17 +6,13 @@ import jakarta.persistence.*;
 @Table(name = "player")
 public class Player {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "username")
     private String username;
 
     @Column(name = "email")
     private String email;
-
-    @Column(name = "password_hash")
-    private String passwordHash;
 
     @Column(name = "wins")
     private int wins;
@@ -29,22 +25,23 @@ public class Player {
 
     public Player() {}
 
-    public Player(String username) {
+    public Player(String id, String username, String email) {
+        this.id = id;
         this.username = username;
+        this.email = email;
     }
 
-    public Long getId() { return id; }
+    public String getId() { return id; }
     public String getUsername() { return username; }
     public String getEmail() { return email; }
-    public String getPasswordHash() { return passwordHash; }
     public int getWins() { return wins; }
     public int getLosses() { return losses; }
     public Boolean getIsOnline() { return isOnline; }
 
+    public void setId(String id) { this.id = id; }
     public void setWins(int wins) { this.wins = wins; }
     public void setLosses(int losses) { this.losses = losses; }
     public void setUsername(String username) { this.username = username; }
     public void setEmail(String email) { this.email = email; }
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public void setIsOnline(Boolean isOnline) { this.isOnline = isOnline; }
 }

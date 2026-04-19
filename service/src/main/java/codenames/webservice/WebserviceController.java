@@ -2,14 +2,14 @@ package codenames.webservice;
 
 import codenames.business.GameService;
 import codenames.business.PlayerService;
-import codenames.dto.GameDTO;
-import codenames.dto.PlayerDTO;
-import codenames.dto.PlayerInitDTO;
+import codenames.dto.*;
 import codenames.model.Game;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173", "http://codenames.eastus.azurecontainer.io"})
+@CrossOrigin(origins = {"http://localhost", "http://localhost:5173", "http://codenames.eastus.azurecontainer.io"})
 public class WebserviceController {
     private final GameService gameService;
     private final PlayerService playerService;
@@ -52,14 +52,34 @@ public class WebserviceController {
         gameService.cleanup(id);
     }
 
-    @PostMapping("/player") //the username, password, and email of a new player go in the body of the request in JSON format
-    public Long createPlayer(@RequestBody PlayerInitDTO dto) {
-        return playerService.createPlayer(dto);
-    }
+//    @PostMapping("/player") //the username, password, and email of a new player go in the body of the request in JSON format
+//    public Long createPlayer(@RequestBody PlayerInitDTO dto) {
+//        return playerService.createPlayer(dto);
+//    }
 
     @PostMapping("/game/{id}/join") //the player Id is a request parameter
-    public Long joinGame(@PathVariable Long id, @RequestParam Long playerId) {
+    public String joinGame(@PathVariable Long id, @RequestParam String playerId) {
         return playerService.addPlayerToGame(id, playerId);
+    }
+
+    @GetMapping("/game/{id}/players")
+    public List<GamePlayerDTO> getPlayers(@PathVariable Long id) {
+        return playerService.getPlayersByGameId(id);
+    }
+
+    @PostMapping("/player/auth")
+    public String createOrGetPlayer(@RequestBody PlayerAuthDTO dto) {
+        return playerService.createOrGetPlayer(dto.getFirebaseUid(), dto.getEmail(), dto.getUsername());
+    }
+
+    @PostMapping("/game/{id}/clue")
+    public void submitClue(@PathVariable Long id, @RequestBody ClueDTO dto) {
+        gameService.submitClue(id, dto.getWord(), dto.getNumber());
+    }
+
+    @PostMapping("/game/{id}/pass")
+    public void passTurn(@PathVariable Long id) {
+        gameService.passTurn(id);
     }
 
 }

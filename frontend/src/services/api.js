@@ -20,5 +20,35 @@ export const api = {
         await fetch(`${API_URL}/game/${id}/guess/${position}`, {
             method: 'POST',
         });
+    },
+    joinGame: async (gameId, playerId) => {
+        const response = await fetch(`${API_URL}/game/${gameId}/join?playerId=${playerId}`, {
+            method: 'POST',
+        });
+        return response.text();
+    },
+    getPlayers: async (gameId) => {
+        const response = await fetch(`${API_URL}/game/${gameId}/players`);
+        return response.json();
+    },
+    createOrGetPlayer: async (firebaseUid, email, username) => {
+        const response = await fetch(`${API_URL}/player/auth`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({firebaseUid, email, username}),
+        });
+        return response.text();
+    },
+    submitClue: async (gameId, word, number) => {
+        await fetch(`${API_URL}/game/${gameId}/clue`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({word, number}),
+        });
+    },
+    passTurn: async (gameId) => {
+        await fetch(`${API_URL}/game/${gameId}/pass`, {
+            method: 'POST',
+        });
     }
 }
