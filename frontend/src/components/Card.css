@@ -1,40 +1,73 @@
 .card {
     background-color: #f0e6d2;
-    border: 2px solid #333;
+    border: 3px solid #333;
     border-radius: 8px;
-    padding: 20px;
+    padding: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
-    transition: transform 0.2s, box-shadow 0.2s;
-    min-height: 80px;
+    transition: all 0.2s;
+    min-height: 100px;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.card.clickable {
+    cursor: pointer;
 }
 
-.card-red {
-    background-color: #ff6b6b;
+.card.clickable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: #fef3d8;
+}
+
+.card-word {
+    text-align: center;
+    word-wrap: break-word;
+    line-height: 1.4;
+    z-index: 2;
+    position: relative;
+}
+
+.card-indicator {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: bold;
+    z-index: 3;
+}
+
+.card.revealed {
     color: white;
+    border-color: transparent;
+    cursor: default;
 }
 
-.card-blue {
-    background-color: #4dabf7;
-    color: white;
+.card.revealed.card-red {
+    background: linear-gradient(135deg, #ff6b6b, #ff5252);
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
 }
 
-.card-neutral {
-    background-color: #f8f9fa;
+.card.revealed.card-blue {
+    background: linear-gradient(135deg, #4dabf7, #339af0);
+    box-shadow: 0 4px 8px rgba(77, 171, 247, 0.3);
+}
+
+.card.revealed.card-neutral {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
     color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.card-black {
-    background-color: #2b2b2b;
-    color: white;
+.card.revealed.card-assassin {
+    background: linear-gradient(135deg, #2b2b2b, #1a1a1a);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }

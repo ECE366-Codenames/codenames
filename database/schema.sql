@@ -31,7 +31,8 @@ CREATE TABLE game_players (
     game_id BIGINT REFERENCES game(id),
     player_id VARCHAR(128) REFERENCES player(id),
     is_red BOOLEAN, -- true for red, false for blue
-    is_spymaster BOOLEAN -- true for spymaster, false for field agent
+    is_spymaster BOOLEAN, -- true for spymaster, false for field agent
+    is_ready BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE word (
@@ -48,3 +49,4 @@ CREATE TABLE game_cards ( --table of cards in active games
     position INTEGER -- 1-25
 );
 
+CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'postgres';

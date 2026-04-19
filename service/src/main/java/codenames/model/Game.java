@@ -39,7 +39,7 @@ public class Game {
     @Column(name = "guesses_remaining")
     private int guessesRemaining;
 
-    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<GameCard> cards;
 
     @PrePersist

@@ -2,14 +2,14 @@ package codenames.dto;
 
 public class CardDTO {
     private String word;
-    private String type; // null if not spymaster
+    private String color; // null if not spymaster (RED, BLUE, NEUTRAL, ASSASSIN)
     private boolean revealed;
     private int position;
 
-    public CardDTO(String word, boolean revealed, String type, int position) {
+    public CardDTO(String word, boolean revealed, String color, int position) {
         this.word = word;
         this.revealed = revealed;
-        this.type = type;
+        this.color = color;
         this.position = position;
     }
 
@@ -17,13 +17,15 @@ public class CardDTO {
         return word;
     }
 
-    public String getType() {
-        return type;
+    public String getColor() {
+        return color;
     }
 
     public boolean isRevealed() {
         return revealed;
     }
 
-    public int getPosition() {return position;}
+    public int getPosition() {
+        return position;
+    }
 }

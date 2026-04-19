@@ -45,12 +45,12 @@ public class GameService {
 
         List<GamePlayer> players = gamePlayerRepository.findByGame(game);
         if (players.size() != 4) {
-            throw new IllegalStateException("Not enough players in game");
+            throw new IllegalStateException("Need exactly 4 players to start");
         }
 
+        // Assign teams and roles
         for (int i = 0; i < players.size(); i++) {
             GamePlayer gp = players.get(i);
-
             if (i < 2) { 
                 gp.setRed(true);          
                 gp.setSpymaster(i == 0);  
@@ -58,22 +58,26 @@ public class GameService {
                 gp.setRed(false);          
                 gp.setSpymaster(i == 2);  
             }
+            gamePlayerRepository.save(gp);
         }
 
+        // Set game status and initial turn
         game.setStatus(Status.STARTED);
         game.setRedTurn(true);
+        game.setTurnPhase(TurnPhase.CLUE);
 
+        // Deal cards
         List<Word> words = wordRepository.getRandomWords(25);
         List<CardType> cardTypes = assignCardTypes();
 
         List<GameCard> cards = new ArrayList<>();
-
         for (int i = 0; i < words.size(); i++) {
             GameCard card = new GameCard(game, words.get(i), cardTypes.get(i), i);
             cards.add(card);
         }
 
         game.setCards(cards);
+        gameRepository.save(game);
 
         return game.getId();
     }

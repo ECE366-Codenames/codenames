@@ -24,6 +24,9 @@ public class GamePlayer {
     @Column(name = "is_spymaster")
     private boolean isSpymaster;
 
+    @Column(name = "is_ready")
+    private boolean isReady = false;
+
     public GamePlayer() {}
 
     public GamePlayer(Game game, Player player) {
@@ -44,4 +47,7 @@ public class GamePlayer {
 
     public boolean isSpymaster() { return isSpymaster; }
     public void setSpymaster(boolean spymaster) { isSpymaster = spymaster; }
+
+    public boolean isReady() { return isReady; }
+    public void setReady(boolean ready) { isReady = ready; }
 }

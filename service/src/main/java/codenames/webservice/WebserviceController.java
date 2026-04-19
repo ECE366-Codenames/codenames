@@ -56,9 +56,20 @@ public class WebserviceController {
 //    public Long createPlayer(@RequestBody PlayerInitDTO dto) {
 //        return playerService.createPlayer(dto);
 //    }
-
+    /* 
     @PostMapping("/game/{id}/join") //the player Id is a request parameter
     public String joinGame(@PathVariable Long id, @RequestParam String playerId) {
+        return playerService.addPlayerToGame(id, playerId);
+    }
+    */
+
+    @PostMapping("/game/{id}/join")
+    public String joinGame(@PathVariable Long id, @RequestBody PlayerAuthDTO dto) {
+        String playerId = playerService.createOrGetPlayer(
+            dto.getFirebaseUid(),
+            dto.getEmail(),
+            dto.getUsername()
+        );
         return playerService.addPlayerToGame(id, playerId);
     }
 
@@ -80,6 +91,16 @@ public class WebserviceController {
     @PostMapping("/game/{id}/pass")
     public void passTurn(@PathVariable Long id) {
         gameService.passTurn(id);
+    }
+
+    @PostMapping("/game/{id}/ready/{playerId}")
+    public void toggleReady(@PathVariable Long id, @PathVariable String playerId) {
+        playerService.togglePlayerReady(id, playerId);
+    }
+
+    @PostMapping("/game/{id}/leave/{playerId}")
+    public void leaveGame(@PathVariable Long id, @PathVariable String playerId) {
+        playerService.removePlayerFromGame(id, playerId);
     }
 
 }

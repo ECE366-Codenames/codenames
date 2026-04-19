@@ -6,6 +6,7 @@ import codenames.dto.PlayerInitDTO;
 import codenames.model.Player;
 import codenames.model.GamePlayer;
 import codenames.model.Game;
+import codenames.model.Status;
 import codenames.repository.GamePlayerRepository;
 import codenames.repository.PlayerRepository;
 import codenames.repository.GameRepository;
@@ -51,14 +52,20 @@ public class PlayerService {
         Player player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new IllegalArgumentException("Player not found"));
 
+        // Check if game is already started
+        if (game.getStatus() != Status.WAITING) {
+            throw new IllegalStateException("Game is not in waiting state");
+        }
+
         if (gamePlayerRepository.existsByGameAndPlayer(game, player)) {
             return playerId;
         }
 
         List<GamePlayer> players = gamePlayerRepository.findByGame(game);
 
+        // Check if game is full (exactly 4 players max)
         if (players.size() >= 4) {
-            throw new IllegalStateException("Game is full");
+            throw new IllegalStateException("Game is full - maximum 4 players allowed");
         }
 
         GamePlayer gp = new GamePlayer(game, player);
@@ -83,9 +90,37 @@ public class PlayerService {
                         gp.getPlayer().getId(),
                         gp.getPlayer().getUsername(),
                         gp.isRed(),
-                        gp.isSpymaster()
+                        gp.isSpymaster(),
+                        gp.isReady()
                 ))
                 .toList();
+    }
+
+    @Transactional
+    public void togglePlayerReady(Long gameId, String playerId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+
+        GamePlayer gp = gamePlayerRepository.findByGameAndPlayer(game, player)
+                .orElseThrow(() -> new RuntimeException("Player not in game"));
+
+        gp.setReady(!gp.isReady());
+        gamePlayerRepository.save(gp);
+    }
+
+    @Transactional
+    public void removePlayerFromGame(Long gameId, String playerId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+
+        GamePlayer gp = gamePlayerRepository.findByGameAndPlayer(game, player)
+                .orElseThrow(() -> new RuntimeException("Player not in game"));
+
+        gamePlayerRepository.delete(gp);
     }
 
 }
