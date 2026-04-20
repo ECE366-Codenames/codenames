@@ -38,7 +38,8 @@ function AuthPage() {
 
     return (
         <div className="auth-page">
-            <h2>{isLogin ? 'Login' : 'Create Account'}</h2>
+            <h1>Codenames</h1>
+            <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     type="email"

@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 function HomePage() {
     const [joinGameId, setJoinGameId] = useState('');
-    const { currentUser, playerId } = useAuth();
+    const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,11 +33,15 @@ function HomePage() {
 
     return (
         <div className="home-page">
+            <div className="home-header">
+                <button onClick={logout} className="logout-button">Logout</button>
+            </div>
             <div className="home-controls">
+                <h1>Codenames</h1>
                 <button onClick={createNewGame}>Create New Game</button>
 
                 <div className="join-game">
-                    <h3>Or Join Existing Game</h3>
+                    <h3>Join Existing Game</h3>
                     <input
                         type="text"
                         placeholder="Enter Game ID"

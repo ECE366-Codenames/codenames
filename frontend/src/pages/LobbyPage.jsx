@@ -41,23 +41,14 @@ function LobbyPage() {
 
     return (
         <div className="lobby-page">
-        <h2>Lobby</h2>
+        <h2>Game Lobby</h2>
         <div className="controls">
-            <p>Game ID: {gameId}</p>
-            <p>Your Player ID: {playerId}</p>  {/* Show but don't edit */}
+            <p><strong>Game ID:</strong> <code>{gameId}</code></p>
 
             <button onClick={handleStartGame}>Start Game</button>
-            <label>
-                <input
-                    type="checkbox"
-                    checked={spymasterMode}
-                    onChange={(e) => setSpymasterMode(e.target.checked)}
-                />
-                Spymaster Mode
-            </label>
         </div>
         <div className="players">
-            <h3>Players in Lobby ({players.length}/4)</h3>
+            <h3>Players ({players.length}/4)</h3>
             {players.map(player => (
                 <div key={player.playerId}>
                     {player.username}

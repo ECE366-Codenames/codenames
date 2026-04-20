@@ -69,42 +69,43 @@ function GamePage() {
 
     return (
         <div className="game-page">
-            <div className="controls">
-                <p>Game ID: {gameId}</p>
-                {!game && (
+            {!game && (
+                <div className="controls">
+                    <p><strong>Game ID:</strong> <code>{gameId}</code></p>
                     <button onClick={handleStartGame}>Start Game</button>
-                )}
-            </div>
+                </div>
+            )}
 
-            <div className="players">
-                {!game && (
+            {!game && (
+                <div className="players">
                     <h3>Players in Lobby ({players.length}/4)</h3>
-                )}
-                {players.map(player => (
-                    <div key={player.playerId}>
-                        {player.username}
-                        {game?.status === 'STARTED' && ` - ${player.red ? 'Red' : 'Blue'} Team`}
-                        {player.spymaster && ' (Spymaster)'}
-                    </div>
-                ))}
-            </div>
+                    {players.map(player => (
+                        <div key={player.playerId}>
+                            {player.username}
+                            {player.spymaster && ' (Spymaster)'}
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {game && game.status === 'STARTED' && (
                 <div className="game-status">
-                    <h3>{game.redTurn ? 'Red' : 'Blue'} Team's Turn</h3>
-                    <p>Phase: {game.turnPhase}</p>
+                    <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6'}}>
+                        {game.redTurn ? '🔴 Red' : '🔵 Blue'} Team's Turn
+                    </h3>
+                    <p><strong>Phase:</strong> {game.turnPhase === 'CLUE' ? 'Waiting for Clue' : 'Guessing'}</p>
                     {game.clueWord && (
-                        <p>Current Clue: {game.clueWord} ({game.clueNumber})</p>
+                        <p><strong>Current Clue:</strong> {game.clueWord} ({game.clueNumber})</p>
                     )}
                     {game.turnPhase === 'GUESS' && (
-                        <p>Guesses Remaining: {game.guessesRemaining}</p>
+                        <p><strong>Guesses Remaining:</strong> {game.guessesRemaining}</p>
                     )}
                 </div>
             )}
 
             {game && game.turnPhase === 'CLUE' && isMyTurn && isSpymaster && (
                 <div className="clue-form">
-                    <h3>Submit Clue</h3>
+                    <h3>Submit Your Clue</h3>
                     <input
                         type="text"
                         placeholder="Clue word"
@@ -123,7 +124,9 @@ function GamePage() {
             )}
 
             {game && game.turnPhase === 'GUESS' && isMyTurn && !isSpymaster && (
-                <button onClick={handlePassTurn}>End Turn</button>
+                <div style={{textAlign: 'center', marginBottom: '24px'}}>
+                    <button onClick={handlePassTurn}>End Turn</button>
+                </div>
             )}
 
             {game && (

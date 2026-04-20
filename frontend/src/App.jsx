@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Link} from 'react-router-dom'
 import HomePage  from './pages/HomePage'
 import LobbyPage from './pages/LobbyPage'
 import GamePage from './pages/GamePage'
@@ -6,7 +6,6 @@ import AuthPage from './pages/AuthPage'
 import './App.css';
 import { auth, db } from './services/firebase';
 import { AuthProvider, useAuth } from './context/AuthContext';
-
 function AppContent() {
   const { currentUser } = useAuth();
 
@@ -14,7 +13,7 @@ function AppContent() {
       <BrowserRouter>
         <div className="app">
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-              <h1>Codenames</h1>
+              <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}><h1>Codenames</h1></Link>
               { currentUser && (
                   <div style = {{ padding: '10px' }}>
                       Logged in as: {currentUser.email}
