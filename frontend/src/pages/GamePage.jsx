@@ -3,6 +3,7 @@ import { api } from '../services/api';
 import Card from '../components/Card';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useGameSocket } from '../hooks/useGameSocket';
 
 function GamePage() {
     const { gameId } = useParams();
@@ -16,11 +17,9 @@ function GamePage() {
     const isMyTurn = currentPlayer?.red === game?.redTurn;
     const isSpymaster = currentPlayer?.spymaster;
 
-    useEffect(() => {
-        if (gameId) {
-            loadGame(gameId);
-        }
-    }, [gameId, spymasterMode]);
+    useGameSocket(gameId, (gameData) => {
+        setGame(gameData);
+    });
 
     const loadGame = async (id) => {
         try {

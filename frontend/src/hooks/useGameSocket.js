@@ -1,0 +1,34 @@
+import { useEffect, useRef } from 'react';
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+
+export function useGameSocket(gameId, onGameUpdate) {
+    const clientRef = useRef(null);
+
+    useEffect(() => {
+        if (!gameId) return;
+
+        const client = new Client({
+            webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+            onConnect: () => {
+                console.log('WebSocket connected');
+                client.subscribe(`/topic/game/${gameId}`, (message) => {
+                    const gameData = JSON.parse(message.body);
+                    onGameUpdate(gameData);
+                });
+            },
+            onStompError: (frame) => {
+                console.error('WebSocket error:', frame);
+            }
+        });
+
+        client.activate();
+        clientRef.current = client;
+
+        return () => {
+            client.deactivate();
+        };
+    }, [gameId, onGameUpdate]);
+
+    return clientRef.current;
+}
