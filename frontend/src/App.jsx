@@ -30,6 +30,21 @@ function AppContent() {
     navigate('/auth');
   };
 
+  const handleGoHome = async (e) => {
+    e.preventDefault();
+    try {
+      // Leave game if currently in one before going home
+      const match = location.pathname.match(/\/(game|lobby)\/(\d+)/);
+      if (match && playerId) {
+        const gameId = match[2];
+        await api.leaveGame(gameId, playerId);
+      }
+    } catch (error) {
+      console.error('Error leaving game:', error);
+    }
+    navigate('/');
+  };
+
   return (
     <div className="app">
       <header style={{
@@ -43,9 +58,9 @@ function AppContent() {
         top: 0,
         zIndex: 100
       }}>
-        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <a href="/" onClick={handleGoHome} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
           <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold' }}>Codenames</h1>
-        </Link>
+        </a>
 
         {currentUser && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
