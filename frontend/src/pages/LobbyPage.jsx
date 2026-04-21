@@ -29,6 +29,21 @@ function LobbyPage() {
         joinAndLoadGame();
     }, [playerId, gameId]);
 
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            try {
+                const gameData = await api.getGame(gameId, false);
+                if (gameData.status === 'STARTED') {
+                    navigate(`/game/${gameId}`);
+                }
+            } catch (error) {
+                console.error('Error checking game status:', error);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [gameId, navigate]);
+
     const loadPlayers = async () => {
         const playerList = await api.getPlayers(gameId);
         setPlayers(playerList);
@@ -36,7 +51,6 @@ function LobbyPage() {
 
     const handleStartGame = async () => {
         await api.startGame(gameId);
-        navigate(`/game/${gameId}`);
     };
 
     return (
@@ -45,7 +59,9 @@ function LobbyPage() {
         <div className="controls">
             <p><strong>Game ID:</strong> <code>{gameId}</code></p>
 
-            <button onClick={handleStartGame}>Start Game</button>
+            <button onClick={handleStartGame} disabled={players.length !== 4}>
+                Start Game
+            </button>
         </div>
         <div className="players">
             <h3>Players ({players.length}/4)</h3>

@@ -21,6 +21,10 @@ function GamePage() {
         setGame(gameData);
     });
 
+    useEffect(() => {
+        loadGame(gameId);
+    }, [gameId]);
+
     const loadGame = async (id) => {
         try {
             console.log('Fetching game data for ID:', id, 'with spymaster mode:', spymasterMode);
@@ -36,23 +40,9 @@ function GamePage() {
         }
     };
 
-    const handleStartGame = async () => {
-        await api.startGame(gameId);
-        await loadGame(gameId);
-    };
-
     const handleGuess = async (position) => {
         await api.makeGuess(gameId, position);
         await loadGame(gameId);
-    };
-
-    const handleJoinGame = async () => {
-        try {
-            await api.joinGame(gameId, playerId);
-            await loadGame(gameId);
-        } catch (error) {
-            console.error('Error joining game:', error);
-        }
     };
 
     const handleSubmitClue = async () => {
@@ -69,25 +59,6 @@ function GamePage() {
 
     return (
         <div className="game-page">
-            {!game && (
-                <div className="controls">
-                    <p><strong>Game ID:</strong> <code>{gameId}</code></p>
-                    <button onClick={handleStartGame}>Start Game</button>
-                </div>
-            )}
-
-            {!game && (
-                <div className="players">
-                    <h3>Players in Lobby ({players.length}/4)</h3>
-                    {players.map(player => (
-                        <div key={player.playerId}>
-                            {player.username}
-                            {player.spymaster && ' (Spymaster)'}
-                        </div>
-                    ))}
-                </div>
-            )}
-
             {game && game.status === 'STARTED' && (
                 <div className="game-status">
                     <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6'}}>
@@ -100,6 +71,19 @@ function GamePage() {
                     {game.turnPhase === 'GUESS' && (
                         <p><strong>Guesses Remaining:</strong> {game.guessesRemaining}</p>
                     )}
+                </div>
+            )}
+
+            {game && (
+                <div className="players">
+                    <h3>Players ({players.length}/4)</h3>
+                    {players.map(player => (
+                        <div key={player.playerId}>
+                            {player.username}
+                            {game?.status === 'STARTED' && ` - ${player.red ? 'Red' : 'Blue'} Team`}
+                            {player.spymaster && ' (Spymaster)'}
+                        </div>
+                    ))}
                 </div>
             )}
 

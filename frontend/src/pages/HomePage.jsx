@@ -33,11 +33,7 @@ function HomePage() {
 
     return (
         <div className="home-page">
-            <div className="home-header">
-                <button onClick={logout} className="logout-button">Logout</button>
-            </div>
             <div className="home-controls">
-                <h1>Codenames</h1>
                 <button onClick={createNewGame}>Create New Game</button>
 
                 <div className="join-game">

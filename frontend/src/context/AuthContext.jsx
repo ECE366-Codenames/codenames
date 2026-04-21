@@ -28,6 +28,9 @@ export function AuthProvider({ children }) {
     const logout = async () => {
         try {
             await signOut(auth);
+            setCurrentUser(null);
+            setPlayerId(null);
+            localStorage.removeItem('playerId');
         } catch (error) {
             console.error('Error signing out:', error);
         }

@@ -16,6 +16,12 @@ export const api = {
         });
         return response.json();
     },
+    endGame: async (id) => {
+        const response = await fetch(`${API_URL}/game/${id}/end`, {
+            method: 'POST',
+        });
+        return response.json();
+    },
     makeGuess: async (id, position) => {
         await fetch(`${API_URL}/game/${id}/guess/${position}`, {
             method: 'POST',
@@ -50,5 +56,13 @@ export const api = {
         await fetch(`${API_URL}/game/${gameId}/pass`, {
             method: 'POST',
         });
+    },
+    leaveGame: async (gameId, playerId) => {
+        const response = await fetch(`${API_URL}/game/${gameId}/leave/${playerId}`, {
+            method: 'POST',
+        });
+        if (!response.ok) {
+            throw new Error('Failed to leave game');
+        }
     }
 }

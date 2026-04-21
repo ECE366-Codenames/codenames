@@ -88,4 +88,17 @@ public class PlayerService {
                 .toList();
     }
 
+    @Transactional
+    public void removePlayerFromGame(Long gameId, String playerId) {
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found"));
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
+
+        GamePlayer gp = gamePlayerRepository.findByGameAndPlayer(game, player)
+                .orElseThrow(() -> new RuntimeException("Player not in game"));
+
+        gamePlayerRepository.delete(gp);
+    }
+
 }
