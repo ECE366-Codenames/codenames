@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 function HomePage() {
     const [joinGameId, setJoinGameId] = useState('');
-    const { currentUser, playerId } = useAuth();
+    const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,7 +37,7 @@ function HomePage() {
                 <button onClick={createNewGame}>Create New Game</button>
 
                 <div className="join-game">
-                    <h3>Or Join Existing Game</h3>
+                    <h3>Join Existing Game</h3>
                     <input
                         type="text"
                         placeholder="Enter Game ID"

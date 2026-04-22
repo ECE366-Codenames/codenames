@@ -29,6 +29,21 @@ function LobbyPage() {
         joinAndLoadGame();
     }, [playerId, gameId]);
 
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            try {
+                const gameData = await api.getGame(gameId, false);
+                if (gameData.status === 'STARTED') {
+                    navigate(`/game/${gameId}`);
+                }
+            } catch (error) {
+                console.error('Error checking game status:', error);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [gameId, navigate]);
+
     const loadPlayers = async () => {
         const playerList = await api.getPlayers(gameId);
         setPlayers(playerList);
@@ -36,28 +51,20 @@ function LobbyPage() {
 
     const handleStartGame = async () => {
         await api.startGame(gameId);
-        navigate(`/game/${gameId}`);
     };
 
     return (
         <div className="lobby-page">
-        <h2>Lobby</h2>
+        <h2>Game Lobby</h2>
         <div className="controls">
-            <p>Game ID: {gameId}</p>
-            <p>Your Player ID: {playerId}</p>  {/* Show but don't edit */}
+            <p><strong>Game ID:</strong> <code>{gameId}</code></p>
 
-            <button onClick={handleStartGame}>Start Game</button>
-            <label>
-                <input
-                    type="checkbox"
-                    checked={spymasterMode}
-                    onChange={(e) => setSpymasterMode(e.target.checked)}
-                />
-                Spymaster Mode
-            </label>
+            <button onClick={handleStartGame} disabled={players.length !== 4}>
+                Start Game
+            </button>
         </div>
         <div className="players">
-            <h3>Players in Lobby ({players.length}/4)</h3>
+            <h3>Players ({players.length}/4)</h3>
             {players.map(player => (
                 <div key={player.playerId}>
                     {player.username}

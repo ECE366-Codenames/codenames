@@ -82,4 +82,9 @@ public class WebserviceController {
         gameService.passTurn(id);
     }
 
+    @PostMapping("/game/{id}/leave/{playerId}")
+    public void leaveGame(@PathVariable Long id, @PathVariable String playerId) {
+        playerService.removePlayerFromGame(id, playerId);
+    }
+
 }

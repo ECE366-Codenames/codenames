@@ -6,6 +6,7 @@ import codenames.model.*;
 import codenames.repository.GameCardRepository;
 import codenames.repository.GameRepository;
 import codenames.repository.WordRepository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,14 @@ public class GameService {
     private final WordRepository wordRepository;
     private final GameCardRepository gameCardRepository;
     private final GamePlayerRepository gamePlayerRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public GameService(GameRepository gameRepository, WordRepository wordRepository, GameCardRepository gameCardRepository, GamePlayerRepository gamePlayerRepository) {
+    public GameService(GameRepository gameRepository, WordRepository wordRepository, GameCardRepository gameCardRepository, GamePlayerRepository gamePlayerRepository, SimpMessagingTemplate messagingTemplate) {
         this.gameRepository = gameRepository;
         this.wordRepository = wordRepository;
         this.gameCardRepository = gameCardRepository;
         this.gamePlayerRepository = gamePlayerRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     public Long createGame() {
@@ -74,6 +77,8 @@ public class GameService {
         }
 
         game.setCards(cards);
+
+        notifyGameUpdate(gameId);
 
         return game.getId();
     }
@@ -150,6 +155,8 @@ public class GameService {
             game.setGuessesRemaining(0);
         }
 
+        notifyGameUpdate(gameId);
+
     }
 
     @Transactional
@@ -161,6 +168,8 @@ public class GameService {
         game.setClueWord(null);
         game.setClueNumber(0);
         game.setGuessesRemaining(0);
+
+        notifyGameUpdate(gameId);
     }
 
     private void checkWinCondition(Game game) {
@@ -187,6 +196,8 @@ public class GameService {
         game.setClueNumber(clueNumber);
         game.setGuessesRemaining(clueNumber + 1);
         game.setTurnPhase(TurnPhase.GUESS);
+
+        notifyGameUpdate(gameId);
     }
 
     @Transactional
@@ -231,6 +242,11 @@ public class GameService {
                 game.getClueNumber(),
                 game.getGuessesRemaining()
         );
+    }
+
+    private void notifyGameUpdate(Long gameId) {
+        Game game = gameRepository.findById(gameId).orElseThrow();
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, toDTO(game, false));
     }
 }
 
