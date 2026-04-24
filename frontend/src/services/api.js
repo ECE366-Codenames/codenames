@@ -22,8 +22,8 @@ export const api = {
         });
         return response.json();
     },
-    makeGuess: async (id, position) => {
-        await fetch(`${API_URL}/game/${id}/guess/${position}`, {
+    makeGuess: async (id, position, playerId) => {
+        await fetch(`${API_URL}/game/${id}/guess/${position}?playerId=${playerId}`, {
             method: 'POST',
         });
     },

@@ -100,7 +100,7 @@ public class GameService {
     }
 
     @Transactional
-    public void guess(Long gameId, int position) {
+    public void guess(Long gameId, int position, String playerId) {
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
 
         if(game.getStatus() != Status.STARTED){
@@ -109,6 +109,14 @@ public class GameService {
 
         if(game.getTurnPhase() != TurnPhase.GUESS){
             throw new RuntimeException("Not guessing phase");
+        }
+
+        //make sure that the player making the guess is the guesser on the currently-going team
+        GamePlayer currentPlayer = gamePlayerRepository.findByGameAndPlayer_Id(game, playerId)
+                .orElseThrow(() -> new RuntimeException("Player not in game"));
+        
+        if (currentPlayer.isSpymaster() || currentPlayer.isRed() != game.getRedTurn()) {
+            throw new RuntimeException("You cannot make a guess at this time");
         }
 
         GameCard card = gameCardRepository.findByGameIdAndPosition(gameId, position).orElseThrow(() -> new RuntimeException("Card not found"));
@@ -225,9 +233,12 @@ public class GameService {
 
     public GameDTO toDTO(Game game, boolean isSpymaster) {
         List<CardDTO> cardsDTOs = game.getCards().stream().map(card -> new CardDTO(
-                card.getWord().toString(),
+                //if card is revealed, then set the word to null, since the card is now "flipped over"
+                //i.e. since the card is flipped, we no longer need the word, only the color
+                card.isRevealed() ? null : card.getWord().toString(),
                 card.isRevealed(),
-                isSpymaster ? card.getCardType().toString() : null,
+                //only give card type to spymaster, or if card is revealed
+                isSpymaster || card.isRevealed() ? card.getCardType().toString() : null,
                 card.getPosition()
         )).toList();
 
