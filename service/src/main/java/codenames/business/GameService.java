@@ -9,6 +9,8 @@ import codenames.repository.WordRepository;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import codenames.repository.GamePlayerRepository;
 
@@ -134,6 +136,7 @@ public class GameService {
             case ASSASSIN:
                 game.setRedWin(!game.getRedTurn());
                 game.setStatus(Status.COMPLETE);
+                notifyGameUpdate(gameId);
                 return;
             case NEUTRAL:
                 endTurn = true;
@@ -256,8 +259,18 @@ public class GameService {
     }
 
     private void notifyGameUpdate(Long gameId) {
-        Game game = gameRepository.findById(gameId).orElseThrow();
-        messagingTemplate.convertAndSend("/topic/game/" + gameId, toDTO(game, false));
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Game game = gameRepository.findById(gameId).orElseThrow();
+                    messagingTemplate.convertAndSend("/topic/game/" + gameId, toDTO(game, false));
+                }
+            });
+        } else {
+            Game game = gameRepository.findById(gameId).orElseThrow();
+            messagingTemplate.convertAndSend("/topic/game/" + gameId, toDTO(game, false));
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { api } from '../services/api';
 import Card from '../components/Card';
 import { useParams } from 'react-router-dom';
@@ -18,7 +18,7 @@ function GamePage() {
     const currentPlayer = players.find(player => String(player.playerId) === String(playerId));
     const isMyTurn = currentPlayer?.red === game?.redTurn;
     const isSpymaster = currentPlayer?.spymaster;
-    const canGuess = game?.turnPhase === 'GUESS' && isMyTurn && !isSpymaster;
+    const canGuess = game?.turnPhase === 'GUESS' && isMyTurn && !isSpymaster && game.status === 'STARTED';
 
     //toggle spymasterMode when we learn the player's role
     useEffect(() => {
@@ -48,9 +48,11 @@ function GamePage() {
         }
     };
 
-    useGameSocket(gameId, () => {
+    const handleGameUpdate = useCallback(() => {
         loadGame(gameId, spymasterModeRef.current);
-    });
+    }, [gameId])
+
+    useGameSocket(gameId, handleGameUpdate);
 
     useEffect(() => {
         loadGame(gameId, spymasterMode);
@@ -75,6 +77,19 @@ function GamePage() {
 
     return (
         <div className="game-page">
+            {game && game.status === 'COMPLETE' && (
+                <div className="game-status" style={{
+                    backgroundColor: game.redWin ? '#fecaca' : '#bfdbfe',
+                    padding: '20px',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    marginBottom: '20px'
+                }}>
+                    <h2 style={{color: game.redWin ? '#ef4444' : '#3b82f6', margin: '0 0 10px 0'}}>
+                        Game Over! {game.redWin ? ' Red Team' : ' Blue Team'} Wins!
+                    </h2>
+                </div>
+            )}
             {game && game.status === 'STARTED' && (
                 <div className="game-status">
                     <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6'}}>
@@ -103,7 +118,7 @@ function GamePage() {
                 </div>
             )}
 
-            {game && game.turnPhase === 'CLUE' && isMyTurn && isSpymaster && (
+            {game && game.turnPhase === 'CLUE' && game.status === 'STARTED' && isMyTurn && isSpymaster && (
                 <div className="clue-form">
                     <h3>Submit Your Clue</h3>
                     <input
@@ -123,7 +138,7 @@ function GamePage() {
                 </div>
             )}
 
-            {game && game.turnPhase === 'GUESS' && isMyTurn && !isSpymaster && (
+            {game && game.turnPhase === 'GUESS' && game.status === 'STARTED' && isMyTurn && !isSpymaster && (
                 <div style={{textAlign: 'center', marginBottom: '24px'}}>
                     <button onClick={handlePassTurn}>End Turn</button>
                 </div>
