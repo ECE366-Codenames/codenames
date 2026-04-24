@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { api } from '../services/api';
 import Card from '../components/Card';
 import { useParams } from 'react-router-dom';
@@ -13,22 +13,30 @@ function GamePage() {
     const [players, setPlayers] = useState([]);
     const [clueWord, setClueWord] = useState('');
     const [clueNumber, setClueNumber] = useState(1);
+    const spymasterModeRef = useRef(spymasterMode);
+    
     const currentPlayer = players.find(player => String(player.playerId) === String(playerId));
     const isMyTurn = currentPlayer?.red === game?.redTurn;
     const isSpymaster = currentPlayer?.spymaster;
+    const canGuess = game?.turnPhase === 'GUESS' && isMyTurn && !isSpymaster;
 
-    useGameSocket(gameId, (gameData) => {
-        setGame(gameData);
-    });
-
+    //toggle spymasterMode when we learn the player's role
     useEffect(() => {
-        loadGame(gameId);
-    }, [gameId]);
+        if (isSpymaster !== undefined) {
+            setSpymasterMode(isSpymaster);
+            spymasterModeRef.current = isSpymaster;
+        }
+    }, [isSpymaster]);
 
-    const loadGame = async (id) => {
+    //keep ref in sync with state
+    useEffect(() => {
+        spymasterModeRef.current = spymasterMode;
+    }, [spymasterMode]);
+
+    const loadGame = async (id, isSpy) => {
         try {
-            console.log('Fetching game data for ID:', id, 'with spymaster mode:', spymasterMode);
-            const gameData = await api.getGame(id, spymasterMode);
+            console.log('Fetching game data for ID:', id, 'with spymaster mode:', isSpy);
+            const gameData = await api.getGame(id, isSpy);
             console.log('Game data:', gameData);
             setGame(gameData);
 
@@ -40,21 +48,29 @@ function GamePage() {
         }
     };
 
+    useGameSocket(gameId, () => {
+        loadGame(gameId, spymasterModeRef.current);
+    });
+
+    useEffect(() => {
+        loadGame(gameId, spymasterMode);
+    }, [gameId, spymasterMode]);
+
     const handleGuess = async (position) => {
-        await api.makeGuess(gameId, position);
-        await loadGame(gameId);
+        await api.makeGuess(gameId, position, playerId);
+        await loadGame(gameId, spymasterModeRef.current);
     };
 
     const handleSubmitClue = async () => {
         await api.submitClue(gameId, clueWord, clueNumber);
         setClueWord('');
         setClueNumber(1);
-        await loadGame(gameId);
+        await loadGame(gameId, spymasterModeRef.current);
     }
 
     const handlePassTurn = async () => {
         await api.passTurn(gameId);
-        await loadGame(gameId);
+        await loadGame(gameId, spymasterModeRef.current);
     }
 
     return (
@@ -115,14 +131,18 @@ function GamePage() {
 
             {game && (
                 <div className="board">
-                    {game.cards?.map((card, index) => (
-                        <Card
-                            key={index}
-                            card={card}
-                            revealed={card.revealed}
-                            onGuess={() => handleGuess(index)}
-                        />
-                    ))}
+                    {game.cards
+                        ?.slice()
+                        .sort((a, b) => a.position - b.position)
+                        .map((card) => (
+                            <Card
+                                key={card.position}
+                                card={card}
+                                revealed={card.revealed}
+                                canGuess={canGuess}
+                                onGuess={() => handleGuess(card.position)}
+                            />
+                        ))}
                 </div>
             )}
         </div>

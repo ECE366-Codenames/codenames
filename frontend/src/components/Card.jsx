@@ -1,20 +1,26 @@
 import './Card.css';
 
-export default function Card({card, onGuess, revealed}) {
+export default function Card({card, onGuess, revealed, canGuess}) {
     const handleClick = () => {
-        if (!revealed && onGuess) {
+        if (!revealed && canGuess) {
             onGuess();
         }
     };
 
     const getCardClass = () => {
-        if (!revealed) return 'card';
-        return `card card-${card.color}`
+        if (!card.type) return 'card';
+        const colorMap = { RED: 'red', BLUE: 'blue', NEUTRAL: 'neutral', ASSASSIN: 'black' };
+        const color = colorMap[card.type];
+        return `card card-${color}`;
     };
 
     return (
-        <div className={getCardClass()} onClick={handleClick}>
-            <span>{card.word}</span>
+        <div 
+            className={getCardClass()} 
+            onClick={handleClick}
+            style={{ cursor: (revealed || !canGuess) ? 'default' : 'pointer' }}
+        >
+            {card.word && <span>{card.word}</span>}
         </div>
     )
 }

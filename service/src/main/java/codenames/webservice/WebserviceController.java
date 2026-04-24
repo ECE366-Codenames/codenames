@@ -38,8 +38,8 @@ public class WebserviceController {
     }
 
     @PostMapping("/game/{id}/guess/{position}") // guesses word at position, sets that card as revealed and updates turn
-    public void guess(@PathVariable Long id, @PathVariable int position) {
-        gameService.guess(id, position);
+    public void guess(@PathVariable Long id, @PathVariable int position, @RequestParam String playerId) {
+        gameService.guess(id, position, playerId);
     }
 
     @PostMapping("/game/{id}/end")
