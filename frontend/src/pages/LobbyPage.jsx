@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useGameSocket } from '../hooks/useGameSocket';
 
 function LobbyPage() {
     const { playerId } = useAuth();
@@ -11,6 +12,14 @@ function LobbyPage() {
     const [players, setPlayers] = useState([]);
     const navigate = useNavigate();
     const hasJoined = useRef(false);
+
+    const handleLobbyUpdate = useCallback((message) => {
+        if (gameId) {
+            api.getPlayers(gameId).then(setPlayers);
+        }
+    }, [gameId]);
+
+    useGameSocket(gameId, handleLobbyUpdate);
 
     useEffect(() => {
         const joinAndLoadGame = async () => {
