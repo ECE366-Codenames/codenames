@@ -14,7 +14,7 @@ function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogout = async () => {
+  const handleLogout = async () => { // TODO: ask "are you sure?"
     try {
       //take game ID from URL and leave game before logging out
       const match = location.pathname.match(/\/(game|lobby)\/(\d+)/);
@@ -30,7 +30,7 @@ function AppContent() {
     navigate('/auth');
   };
 
-  const handleGoHome = async (e) => {
+  const handleGoHome = async (e) => { // TODO: ask "are you sure?" and set game status to ended
     e.preventDefault();
     try {
       // Leave game if currently in one before going home

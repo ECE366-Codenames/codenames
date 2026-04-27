@@ -26,7 +26,7 @@ function HomePage() {
     };
 
     const joinGame = async () => {
-        if (joinGameId) {
+        if (joinGameId) { // TODO: make sure player cant join game if already started
             navigate(`/lobby/${joinGameId}`);
         }
     };

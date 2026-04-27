@@ -238,7 +238,7 @@ public class GameService {
         List<CardDTO> cardsDTOs = game.getCards().stream().map(card -> new CardDTO(
                 //if card is revealed, then set the word to null, since the card is now "flipped over"
                 //i.e. since the card is flipped, we no longer need the word, only the color
-                card.isRevealed() ? null : card.getWord().toString(),
+                card.isRevealed() ? " " : card.getWord().toString(),
                 card.isRevealed(),
                 //only give card type to spymaster, or if card is revealed
                 isSpymaster || card.isRevealed() ? card.getCardType().toString() : null,

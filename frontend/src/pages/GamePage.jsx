@@ -72,11 +72,11 @@ function GamePage() {
         }
 
         if (/[^a-zA-Z]/.test(trimmedClue)) {
-            alert('Clue must be a single word.');
+            alert('Clue must be a single word and contain only letters.');
             return;
         }
 
-        const cardWords = game.cards.map(card => card.word.toLowerCase());
+        const cardWords = game.cards.map(card => card.word.toLowerCase()); // TODO: fix this
         if (cardWords.includes(trimmedClue.toLowerCase())) {
             alert('Clue cannot be a word from the game board.');
             return;
