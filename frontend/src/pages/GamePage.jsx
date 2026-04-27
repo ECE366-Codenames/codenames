@@ -76,32 +76,19 @@ function GamePage() {
     }
 
     return (
-        <div className="game-page">
+        <div className={`game-page${game?.redTurn && game?.status === 'STARTED' ? ' red-turn' : ' blue-turn'}`}>
             {game && game.status === 'COMPLETE' && (
                 <div className="game-status" style={{
                     backgroundColor: game.redWin ? '#fecaca' : '#bfdbfe',
                     padding: '20px',
                     borderRadius: '8px',
                     textAlign: 'center',
-                    marginBottom: '20px'
+                    marginBottom: '20px',
+                    marginTop: '20px'
                 }}>
                     <h2 style={{color: game.redWin ? '#ef4444' : '#3b82f6', margin: '0 0 10px 0'}}>
                         Game Over! {game.redWin ? ' Red Team' : ' Blue Team'} Wins!
                     </h2>
-                </div>
-            )}
-            {game && game.status === 'STARTED' && (
-                <div className="game-status">
-                    <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6'}}>
-                        {game.redTurn ? '🔴 Red' : '🔵 Blue'} Team's Turn
-                    </h3>
-                    <p><strong>Phase:</strong> {game.turnPhase === 'CLUE' ? 'Waiting for Clue' : 'Guessing'}</p>
-                    {game.clueWord && (
-                        <p><strong>Current Clue:</strong> {game.clueWord} ({game.clueNumber})</p>
-                    )}
-                    {game.turnPhase === 'GUESS' && (
-                        <p><strong>Guesses Remaining:</strong> {game.guessesRemaining}</p>
-                    )}
                 </div>
             )}
 
@@ -115,6 +102,38 @@ function GamePage() {
                             {player.spymaster && ' (Spymaster)'}
                         </div>
                     ))}
+                </div>
+            )}
+
+            {game && game.status === 'STARTED' && (
+                <div className="game-status">
+                    <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6', marginBottom: '16px'}}>
+                        {game.redTurn ? '🔴 Red' : '🔵 Blue'} Team's Turn
+                    </h3>
+                    <div className="game-status-info">
+                        <div className="status-phase">
+                            <div className="status-label">Phase</div>
+                            <div className="status-value">{game.turnPhase === 'CLUE' ? 'Waiting for Clue' : 'Guessing'}</div>
+                        </div>
+                        <div className="status-clue">
+                            {game.clueWord ? (
+                                <>
+                                    <div className="status-label">Current Clue</div>
+                                    <div className="status-value clue-display">{game.clueWord} <span className="clue-number">({game.clueNumber})</span></div>
+                                </>
+                            ) : (
+                                <div className="status-value" style={{opacity: 0.5}}>No clue yet</div>
+                            )}
+                        </div>
+                        <div className="status-guesses">
+                            {game.turnPhase === 'GUESS' && (
+                                <>
+                                    <div className="status-label">Guesses Left</div>
+                                    <div className="status-value">{game.guessesRemaining}</div>
+                                </>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -139,7 +158,7 @@ function GamePage() {
             )}
 
             {game && game.turnPhase === 'GUESS' && game.status === 'STARTED' && isMyTurn && !isSpymaster && (
-                <div style={{textAlign: 'center', marginBottom: '24px'}}>
+                <div style={{textAlign: 'center', marginBottom: '24px', marginTop: '24px'}}>
                     <button onClick={handlePassTurn}>End Turn</button>
                 </div>
             )}
