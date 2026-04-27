@@ -64,6 +64,24 @@ function GamePage() {
     };
 
     const handleSubmitClue = async () => {
+        const trimmedClue = clueWord.trim();
+
+        if (!trimmedClue) {
+            alert('Please enter a clue word.');
+            return;
+        }
+
+        if (trimmedClue.includes(' ')) {
+            alert('Clue must be a single word.');
+            return;
+        }
+
+        const cardWords = game.cards.map(card => card.word.toLowerCase());
+        if (cardWords.includes(trimmedClue.toLowerCase())) {
+            alert('Clue cannot be a word from the game board.');
+            return;
+        }
+
         await api.submitClue(gameId, clueWord, clueNumber);
         setClueWord('');
         setClueNumber(1);
@@ -76,7 +94,7 @@ function GamePage() {
     }
 
     return (
-        <div className={`game-page${game?.redTurn && game?.status === 'STARTED' ? ' red-turn' : ' blue-turn'}`}>
+        <div className={`game-page${game?.status === 'STARTED' ? (game?.redTurn ? ' red-turn' : ' blue-turn') : ''}`}>
             {game && game.status === 'COMPLETE' && (
                 <div className="game-status" style={{
                     backgroundColor: game.redWin ? '#fecaca' : '#bfdbfe',
