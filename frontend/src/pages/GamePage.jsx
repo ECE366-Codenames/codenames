@@ -71,7 +71,7 @@ function GamePage() {
             return;
         }
 
-        if (trimmedClue.includes(' ')) {
+        if (/[^a-zA-Z]/.test(trimmedClue)) {
             alert('Clue must be a single word.');
             return;
         }
