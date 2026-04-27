@@ -19,6 +19,10 @@ Run the shell script (container instance muse be running):
 ```
 ./deploy.sh
 ```
+If it says authentication required:
+```
+az acr login --name codenames 
+```
 
 ## OR: In Postman
 

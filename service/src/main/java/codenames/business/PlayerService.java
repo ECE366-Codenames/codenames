@@ -9,20 +9,25 @@ import codenames.model.Game;
 import codenames.repository.GamePlayerRepository;
 import codenames.repository.PlayerRepository;
 import codenames.repository.GameRepository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
 public class PlayerService {
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
     private final GamePlayerRepository gamePlayerRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public PlayerService(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository) {
+    public PlayerService(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, SimpMessagingTemplate messagingTemplate) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.gamePlayerRepository = gamePlayerRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @Transactional
@@ -63,6 +68,8 @@ public class PlayerService {
 
         GamePlayer gp = new GamePlayer(game, player);
         gamePlayerRepository.save(gp);
+
+        notifyLobbyUpdate(gameId, "player-joined");
         return playerId;
     }
 
@@ -99,6 +106,20 @@ public class PlayerService {
                 .orElseThrow(() -> new RuntimeException("Player not in game"));
 
         gamePlayerRepository.delete(gp);
+        notifyLobbyUpdate(gameId, "player-left");
+    }
+
+    private void notifyLobbyUpdate(Long gameId, String message) {
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    messagingTemplate.convertAndSend("/topic/game/" + gameId, message);
+                }
+            });
+        } else {
+            messagingTemplate.convertAndSend("/topic/game/" + gameId, message);
+        }
     }
 
 }

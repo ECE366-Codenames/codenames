@@ -13,8 +13,12 @@ export function useGameSocket(gameId, onGameUpdate) {
             onConnect: () => {
                 console.log('WebSocket connected');
                 client.subscribe(`/topic/game/${gameId}`, (message) => {
-                    const gameData = JSON.parse(message.body);
-                    onGameUpdate(gameData);
+                    try {
+                        const gameData = JSON.parse(message.body);
+                        onGameUpdate(gameData);
+                    } catch (e) {
+                        onGameUpdate(message.body);
+                    }
                 });
             },
             onStompError: (frame) => {

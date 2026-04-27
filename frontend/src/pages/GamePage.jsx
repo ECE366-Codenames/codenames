@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { api } from '../services/api';
 import Card from '../components/Card';
 import { useParams } from 'react-router-dom';
@@ -18,7 +18,7 @@ function GamePage() {
     const currentPlayer = players.find(player => String(player.playerId) === String(playerId));
     const isMyTurn = currentPlayer?.red === game?.redTurn;
     const isSpymaster = currentPlayer?.spymaster;
-    const canGuess = game?.turnPhase === 'GUESS' && isMyTurn && !isSpymaster;
+    const canGuess = game?.turnPhase === 'GUESS' && isMyTurn && !isSpymaster && game.status === 'STARTED';
 
     //toggle spymasterMode when we learn the player's role
     useEffect(() => {
@@ -48,9 +48,11 @@ function GamePage() {
         }
     };
 
-    useGameSocket(gameId, () => {
+    const handleGameUpdate = useCallback(() => {
         loadGame(gameId, spymasterModeRef.current);
-    });
+    }, [gameId])
+
+    useGameSocket(gameId, handleGameUpdate);
 
     useEffect(() => {
         loadGame(gameId, spymasterMode);
@@ -62,6 +64,24 @@ function GamePage() {
     };
 
     const handleSubmitClue = async () => {
+        const trimmedClue = clueWord.trim();
+
+        if (!trimmedClue) {
+            alert('Please enter a clue word.');
+            return;
+        }
+
+        if (/[^a-zA-Z]/.test(trimmedClue)) {
+            alert('Clue must be a single word.');
+            return;
+        }
+
+        const cardWords = game.cards.map(card => card.word.toLowerCase());
+        if (cardWords.includes(trimmedClue.toLowerCase())) {
+            alert('Clue cannot be a word from the game board.');
+            return;
+        }
+
         await api.submitClue(gameId, clueWord, clueNumber);
         setClueWord('');
         setClueNumber(1);
@@ -74,19 +94,19 @@ function GamePage() {
     }
 
     return (
-        <div className="game-page">
-            {game && game.status === 'STARTED' && (
-                <div className="game-status">
-                    <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6'}}>
-                        {game.redTurn ? '🔴 Red' : '🔵 Blue'} Team's Turn
-                    </h3>
-                    <p><strong>Phase:</strong> {game.turnPhase === 'CLUE' ? 'Waiting for Clue' : 'Guessing'}</p>
-                    {game.clueWord && (
-                        <p><strong>Current Clue:</strong> {game.clueWord} ({game.clueNumber})</p>
-                    )}
-                    {game.turnPhase === 'GUESS' && (
-                        <p><strong>Guesses Remaining:</strong> {game.guessesRemaining}</p>
-                    )}
+        <div className={`game-page${game?.status === 'STARTED' ? (game?.redTurn ? ' red-turn' : ' blue-turn') : ''}`}>
+            {game && game.status === 'COMPLETE' && (
+                <div className="game-status" style={{
+                    backgroundColor: game.redWin ? '#fecaca' : '#bfdbfe',
+                    padding: '20px',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    marginBottom: '20px',
+                    marginTop: '20px'
+                }}>
+                    <h2 style={{color: game.redWin ? '#ef4444' : '#3b82f6', margin: '0 0 10px 0'}}>
+                        Game Over! {game.redWin ? ' Red Team' : ' Blue Team'} Wins!
+                    </h2>
                 </div>
             )}
 
@@ -103,7 +123,39 @@ function GamePage() {
                 </div>
             )}
 
-            {game && game.turnPhase === 'CLUE' && isMyTurn && isSpymaster && (
+            {game && game.status === 'STARTED' && (
+                <div className="game-status">
+                    <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6', marginBottom: '16px'}}>
+                        {game.redTurn ? '🔴 Red' : '🔵 Blue'} Team's Turn
+                    </h3>
+                    <div className="game-status-info">
+                        <div className="status-phase">
+                            <div className="status-label">Phase</div>
+                            <div className="status-value">{game.turnPhase === 'CLUE' ? 'Waiting for Clue' : 'Guessing'}</div>
+                        </div>
+                        <div className="status-clue">
+                            {game.clueWord ? (
+                                <>
+                                    <div className="status-label">Current Clue</div>
+                                    <div className="status-value clue-display">{game.clueWord} <span className="clue-number">({game.clueNumber})</span></div>
+                                </>
+                            ) : (
+                                <div className="status-value" style={{opacity: 0.5}}>No clue yet</div>
+                            )}
+                        </div>
+                        <div className="status-guesses">
+                            {game.turnPhase === 'GUESS' && (
+                                <>
+                                    <div className="status-label">Guesses Left</div>
+                                    <div className="status-value">{game.guessesRemaining}</div>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {game && game.turnPhase === 'CLUE' && game.status === 'STARTED' && isMyTurn && isSpymaster && (
                 <div className="clue-form">
                     <h3>Submit Your Clue</h3>
                     <input
@@ -123,8 +175,8 @@ function GamePage() {
                 </div>
             )}
 
-            {game && game.turnPhase === 'GUESS' && isMyTurn && !isSpymaster && (
-                <div style={{textAlign: 'center', marginBottom: '24px'}}>
+            {game && game.turnPhase === 'GUESS' && game.status === 'STARTED' && isMyTurn && !isSpymaster && (
+                <div style={{textAlign: 'center', marginBottom: '24px', marginTop: '24px'}}>
                     <button onClick={handlePassTurn}>End Turn</button>
                 </div>
             )}

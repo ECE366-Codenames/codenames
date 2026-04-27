@@ -246,7 +246,22 @@ input:focus {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: 16px;
 }
+
+/*.game-page.my-turn-red {*/
+/*  box-shadow: 0 0 30px 8px rgba(239, 68, 68, 0.6),*/
+/*              0 0 60px 15px rgba(239, 68, 68, 0.3);*/
+/*  border-radius: 8px;*/
+/*  transition: box-shadow 0.3s ease;*/
+/*}*/
+
+/*.game-page.my-turn-blue {*/
+/*  box-shadow: 0 0 30px 8px rgba(59, 130, 246, 0.6),*/
+/*              0 0 60px 15px rgba(59, 130, 246, 0.3);*/
+/*  border-radius: 8px;*/
+/*  transition: box-shadow 0.3s ease;*/
+/*}*/
 
 .game-page .controls {
   display: flex;
@@ -268,18 +283,59 @@ input:focus {
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
   margin-bottom: 24px;
+  margin-top: 24px;
 }
 
 .game-status h3 {
   margin: 0 0 16px 0;
   color: var(--text-h);
   font-size: 24px;
+  text-align: center;
 }
 
-.game-status p {
-  margin: 8px 0;
+.game-status-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+}
+
+.status-phase,
+.status-clue,
+.status-guesses {
+  flex: 1;
+  text-align: center;
+}
+
+.status-clue {
+  flex: 2;
+}
+
+.status-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   color: var(--text);
-  font-size: 16px;
+  opacity: 0.7;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.status-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.clue-display {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.clue-number {
+  font-size: 24px;
+  opacity: 0.8;
 }
 
 .clue-form {
@@ -293,6 +349,7 @@ input:focus {
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
   margin-bottom: 24px;
+  margin-top: 24px;
   flex-wrap: wrap;
 }
 
@@ -311,6 +368,18 @@ input:focus {
   grid-template-columns: repeat(5, 1fr);
   gap: 12px;
   margin-top: 24px;
+}
+
+.game-page.red-turn {
+  outline: 4px solid #ef4444;
+  outline-offset: -4px;
+  border-radius: 8px;
+}
+
+.game-page.blue-turn {
+  outline: 4px solid #3b82f6;
+  outline-offset: -4px;
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {
