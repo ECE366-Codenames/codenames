@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 20px;
   min-height: 100vh;
+  width: 90%;
 }
 
 /* Buttons */
@@ -219,7 +220,7 @@ input:focus {
 }
 
 .players {
-  padding: 32px;
+  padding: 24px;
   background: var(--bg);
   border-radius: 16px;
   box-shadow: var(--shadow);
@@ -227,9 +228,64 @@ input:focus {
 }
 
 .players h3 {
-  margin: 0 0 20px 0;
+  margin: 0 0 16px 0;
   color: var(--text-h);
-  font-size: 20px;
+  font-size: 18px;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  column-gap: 12px;
+  align-items: center;
+}
+
+.team-column {
+  display: grid;
+  grid-auto-rows: auto;
+  row-gap: 8px;
+  align-content: start;
+}
+
+.team-column h4 {
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  text-align: center;
+  height: auto;
+}
+
+.team-column.red h4 {
+  color: #ef4444;
+}
+
+.team-column.blue h4 {
+  color: #3b82f6;
+}
+
+.team-column.role .player-item {
+  border: 2px solid transparent;
+}
+
+.player-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.game-page.red-turn .team-column.red .player-item  {
+  background: #bfbbb2;
+  border-radius: 8px;
+}
+
+.game-page.blue-turn .team-column.blue .player-item {
+  background: #bfbbb2;
+  border-radius: 8px;
+}
+
+.player-item.active {
+  border: 2px solid;
+  border-radius: 8px;
 }
 
 .players > div {
@@ -244,24 +300,38 @@ input:focus {
 /* Game Page */
 .game-page {
   padding: 20px;
-  max-width: 1200px;
+  max-width: 1600px;
   margin: 0 auto;
   margin-top: 16px;
+  height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-/*.game-page.my-turn-red {*/
-/*  box-shadow: 0 0 30px 8px rgba(239, 68, 68, 0.6),*/
-/*              0 0 60px 15px rgba(239, 68, 68, 0.3);*/
-/*  border-radius: 8px;*/
-/*  transition: box-shadow 0.3s ease;*/
-/*}*/
+.game-layout {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
 
-/*.game-page.my-turn-blue {*/
-/*  box-shadow: 0 0 30px 8px rgba(59, 130, 246, 0.6),*/
-/*              0 0 60px 15px rgba(59, 130, 246, 0.3);*/
-/*  border-radius: 8px;*/
-/*  transition: box-shadow 0.3s ease;*/
-/*}*/
+.game-sidebar {
+  flex: 0 0 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.game-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  padding-top: 0;
+}
 
 .game-page .controls {
   display: flex;
@@ -282,8 +352,6 @@ input:focus {
   border-radius: 12px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
-  margin-bottom: 24px;
-  margin-top: 24px;
 }
 
 .game-status h3 {
@@ -319,6 +387,7 @@ input:focus {
   opacity: 0.7;
   margin-bottom: 8px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 .status-value {
@@ -348,8 +417,6 @@ input:focus {
   border-radius: 12px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
-  margin-bottom: 24px;
-  margin-top: 24px;
   flex-wrap: wrap;
 }
 
@@ -367,7 +434,10 @@ input:focus {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 12px;
-  margin-top: 24px;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
 }
 
 .game-page.red-turn {

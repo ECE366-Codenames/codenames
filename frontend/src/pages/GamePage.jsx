@@ -110,93 +110,121 @@ function GamePage() {
                 </div>
             )}
 
-            {game && (
-                <div className="players">
-                    <h3>Players ({players.length}/4)</h3>
-                    {players.map(player => (
-                        <div key={player.playerId}>
-                            {player.username}
-                            {game?.status === 'STARTED' && ` - ${player.red ? 'Red' : 'Blue'} Team`}
-                            {player.spymaster && ' (Spymaster)'}
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            {game && game.status === 'STARTED' && (
-                <div className="game-status">
-                    <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6', marginBottom: '16px'}}>
-                        {game.redTurn ? '🔴 Red' : '🔵 Blue'} Team's Turn
-                    </h3>
-                    <div className="game-status-info">
-                        <div className="status-phase">
-                            <div className="status-label">Phase</div>
-                            <div className="status-value">{game.turnPhase === 'CLUE' ? 'Waiting for Clue' : 'Guessing'}</div>
-                        </div>
-                        <div className="status-clue">
-                            {game.clueWord ? (
-                                <>
-                                    <div className="status-label">Current Clue</div>
-                                    <div className="status-value clue-display">{game.clueWord} <span className="clue-number">({game.clueNumber})</span></div>
-                                </>
+            <div className="game-layout">
+                <div className="game-sidebar">
+                    {game && (
+                        <div className="players">
+                            <h3>Players ({players.length}/4)</h3>
+                            {game?.status === 'STARTED' ? (
+                                <div className="players-grid">
+                                    <div className="team-column role">
+                                        <h4>Role</h4>
+                                        <div className="player-item">Spy:</div>
+                                        <div className="player-item">Agent:</div>
+                                    </div>
+                                    <div className="team-column red">
+                                        <h4>🔴 Red Team</h4>
+                                        {players.filter(p => p.red).sort((a, b) => b.spymaster - a.spymaster).map(player => (
+                                            <div key={player.playerId} className={`player-item${(game.redTurn && (player.spymaster && game.turnPhase === 'CLUE' || !player.spymaster && game.turnPhase === 'GUESS')) ? ' active' : ''}`}>
+                                                {player.username}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="team-column blue">
+                                        <h4>🔵 Blue Team</h4>
+                                        {players.filter(p => !p.red).sort((a, b) => b.spymaster - a.spymaster).map(player => (
+                                            <div key={player.playerId} className={`player-item${(!game.redTurn && (player.spymaster && game.turnPhase === 'CLUE' || !player.spymaster && game.turnPhase === 'GUESS')) ? ' active' : ''}`}>
+                                                {player.username}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
                             ) : (
-                                <div className="status-value" style={{opacity: 0.5}}>No clue yet</div>
+                                players.map(player => (
+                                    <div key={player.playerId}>{player.username}</div>
+                                ))
                             )}
                         </div>
-                        <div className="status-guesses">
-                            {game.turnPhase === 'GUESS' && (
-                                <>
-                                    <div className="status-label">Guesses Left</div>
-                                    <div className="status-value">{game.guessesRemaining}</div>
-                                </>
-                            )}
+                    )}
+
+                    {game && game.status === 'STARTED' && (
+                        <div className="game-status">
+                            <h3 style={{color: game.redTurn ? '#ef4444' : '#3b82f6', marginBottom: '16px'}}>
+                                {game.redTurn ? '🔴 Red' : '🔵 Blue'} Team's Turn
+                            </h3>
+                            <div className="game-status-info">
+                                <div className="status-phase">
+                                    <div className="status-label">Phase</div>
+                                    <div className="status-value">{game.turnPhase === 'CLUE' ? 'Waiting for Clue' : 'Guessing'}</div>
+                                </div>
+                                <div className="status-clue">
+                                    {game.clueWord ? (
+                                        <>
+                                            <div className="status-label">Current Clue</div>
+                                            <div className="status-value clue-display">{game.clueWord} <span className="clue-number">({game.clueNumber})</span></div>
+                                        </>
+                                    ) : (
+                                        <div className="status-value" style={{opacity: 0.5}}>No clue yet</div>
+                                    )}
+                                </div>
+                                <div className="status-guesses">
+                                    {game.turnPhase === 'GUESS' && (
+                                        <>
+                                            <div className="status-label">Guesses Remaining</div>
+                                            <div className="status-value">{game.guessesRemaining}</div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    )}
 
-            {game && game.turnPhase === 'CLUE' && game.status === 'STARTED' && isMyTurn && isSpymaster && (
-                <div className="clue-form">
-                    <h3>Submit Your Clue</h3>
-                    <input
-                        type="text"
-                        placeholder="Clue word"
-                        value={clueWord}
-                        onChange={(e) => setClueWord(e.target.value)}
-                    />
-                    <input
-                        type="number"
-                        min="1"
-                        max="9"
-                        value={clueNumber}
-                        onChange={(e) => setClueNumber(parseInt(e.target.value))}
-                    />
-                    <button onClick={handleSubmitClue}>Submit Clue</button>
-                </div>
-            )}
-
-            {game && game.turnPhase === 'GUESS' && game.status === 'STARTED' && isMyTurn && !isSpymaster && (
-                <div style={{textAlign: 'center', marginBottom: '24px', marginTop: '24px'}}>
-                    <button onClick={handlePassTurn}>End Turn</button>
-                </div>
-            )}
-
-            {game && (
-                <div className="board">
-                    {game.cards
-                        ?.slice()
-                        .sort((a, b) => a.position - b.position)
-                        .map((card) => (
-                            <Card
-                                key={card.position}
-                                card={card}
-                                revealed={card.revealed}
-                                canGuess={canGuess}
-                                onGuess={() => handleGuess(card.position)}
+                    {game && game.turnPhase === 'CLUE' && game.status === 'STARTED' && isMyTurn && isSpymaster && (
+                        <div className="clue-form">
+                            <h3>Submit Your Clue</h3>
+                            <input
+                                type="text"
+                                placeholder="Clue word"
+                                value={clueWord}
+                                onChange={(e) => setClueWord(e.target.value)}
                             />
-                        ))}
+                            <input
+                                type="number"
+                                min="1"
+                                max="9"
+                                value={clueNumber}
+                                onChange={(e) => setClueNumber(parseInt(e.target.value))}
+                            />
+                            <button onClick={handleSubmitClue}>Submit Clue</button>
+                        </div>
+                    )}
+
+                    {game && game.turnPhase === 'GUESS' && game.status === 'STARTED' && isMyTurn && !isSpymaster && (
+                        <div style={{textAlign: 'center', marginBottom: '24px', marginTop: '24px'}}>
+                            <button onClick={handlePassTurn}>End Turn</button>
+                        </div>
+                    )}
                 </div>
-            )}
+
+                <div className="game-main">
+                    {game && (
+                        <div className="board">
+                            {game.cards
+                                ?.slice()
+                                .sort((a, b) => a.position - b.position)
+                                .map((card) => (
+                                    <Card
+                                        key={card.position}
+                                        card={card}
+                                        revealed={card.revealed}
+                                        canGuess={canGuess}
+                                        onGuess={() => handleGuess(card.position)}
+                                    />
+                                ))}
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
