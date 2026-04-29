@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -33,6 +33,21 @@ function HomePage() {
 
     return (
         <div className="home-page">
+            <div className="home-header">
+                <Link to="/rules" style={{ textDecoration: 'none' }}>
+                    <button className="rules-button" style={{ 
+                        background: 'transparent', 
+                        color: '#667eea', 
+                        border: '2px solid #667eea',
+                        boxShadow: 'none',
+                        padding: '8px 16px',
+                        fontSize: '14px'
+                    }}>
+                        Rules
+                    </button>
+                </Link>
+            </div>
+
             <div className="home-controls">
                 <button onClick={createNewGame}>Create New Game</button>
 
