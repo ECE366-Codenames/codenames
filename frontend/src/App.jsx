@@ -3,6 +3,7 @@ import HomePage  from './pages/HomePage'
 import LobbyPage from './pages/LobbyPage'
 import GamePage from './pages/GamePage'
 import AuthPage from './pages/AuthPage'
+import RulesPage from './pages/RulesPage'
 import './App.css';
 import { auth, db } from './services/firebase';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -80,6 +81,7 @@ function AppContent() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/rules" element={<RulesPage />} />
         <Route path="/lobby/:gameId" element={<LobbyPage />} />
         <Route path="/game/:gameId" element={<GamePage />} />
         <Route path="/auth" element={<AuthPage />} />

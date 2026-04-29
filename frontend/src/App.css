@@ -388,3 +388,54 @@ input:focus {
     width: 100%;
   }
 }
+
+/* Rules Page */
+.rules-page {
+  max-width: 800px;
+  padding: 32px 20px;
+  margin: 0 auto;
+}
+
+.rules-page h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: var(--text-h);
+}
+
+.rules-section {
+  margin-bottom: 32px;
+  padding: 20px;
+  background: var(--bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.rules-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-h);
+}
+
+.rules-section p {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.back-button {
+  background: transparent;
+  color: #667eea;
+  border: 2px solid #667eea;
+  box-shadow: none;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.back-button:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+}
