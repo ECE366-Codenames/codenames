@@ -71,6 +71,11 @@ function GamePage() {
             return;
         }
 
+        if (trimmedClue.length > 20) {
+            alert('Clue word cannot exceed 20 characters.');
+            return;
+        }
+
         if (/[^a-zA-Z]/.test(trimmedClue)) {
             alert('Clue must be a single word and contain only letters.');
             return;
