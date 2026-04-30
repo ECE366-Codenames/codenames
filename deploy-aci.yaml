@@ -50,6 +50,7 @@ properties:
         ports:
           - port: 80
   osType: Linux
+  restartPolicy: Always
   ipAddress:
     type: Public
     dnsNameLabel: codenames
@@ -63,5 +64,5 @@ properties:
   imageRegistryCredentials:
     - server: codenames.azurecr.io
       username: codenames
-      password: 9aFuMzQb9gIlnQIPkEecQjTFQWBnQo3OZzS8TMErTb6U1BGFyIdIJQQJ99CCACYeBjFEqg7NAAACAZCRS9Ro
+      password:
 type: Microsoft.ContainerInstance/containerGroups

@@ -47,46 +47,37 @@ function AppContent() {
   };
 
   return (
-    <div className="app">
-      <header style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '16px 24px',
-        borderBottom: '1px solid #e5e7eb',
-        backgroundColor: '#fff',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100
-      }}>
+    <div>
+      <header>
         <a href="/" onClick={handleGoHome} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
           <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold' }}>Codenames</h1>
         </a>
 
         {currentUser && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             <span style={{ color: '#666', fontSize: '14px' }}>
               Logged in as: <strong>{currentUser.email}</strong>
             </span>
-            <button
-              className="logout-button"
-              onClick={handleLogout}
-              style={{ padding: '8px 16px', cursor: 'pointer' }}
-            >
-              Logout
-            </button>
-          </div>
+              <button
+                  className="logout-button"
+                  onClick={handleLogout}
+                  style={{ padding: '8px 16px', cursor: 'pointer' }}
+              >
+                Logout
+              </button>
+            </div>
         )}
       </header>
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/rules" element={<RulesPage />} />
+          <Route path="/lobby/:gameId" element={<LobbyPage />} />
+          <Route path="/game/:gameId" element={<GamePage />} />
+          <Route path="/auth" element={<AuthPage />} />
+        </Routes>
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/rules" element={<RulesPage />} />
-        <Route path="/lobby/:gameId" element={<LobbyPage />} />
-        <Route path="/game/:gameId" element={<GamePage />} />
-        <Route path="/auth" element={<AuthPage />} />
-      </Routes>
-
+      </div>
     </div>
   );
 }

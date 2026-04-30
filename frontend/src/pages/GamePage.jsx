@@ -124,8 +124,8 @@ function GamePage() {
                                 <div className="players-grid">
                                     <div className="team-column role">
                                         <h4>Role</h4>
-                                        <div className="player-item">Spy:</div>
-                                        <div className="player-item">Agent:</div>
+                                        <div className="player-item role">Spy:</div>
+                                        <div className="player-item role">Agent:</div>
                                     </div>
                                     <div className="team-column red">
                                         <h4>🔴 Red Team</h4>
