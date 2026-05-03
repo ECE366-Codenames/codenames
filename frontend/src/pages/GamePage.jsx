@@ -76,7 +76,7 @@ function GamePage() {
             return;
         }
 
-        const cardWords = game.cards.map(card => card.word.toLowerCase()); // TODO: fix this
+        const cardWords = game.cards.map(card => card.word.toLowerCase());
         if (cardWords.includes(trimmedClue.toLowerCase())) {
             alert('Clue cannot be a word from the game board.');
             return;

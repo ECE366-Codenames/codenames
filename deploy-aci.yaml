@@ -40,6 +40,9 @@ properties:
     - name: frontend
       properties:
         image: codenames.azurecr.io/frontend:latest
+        environmentVariables:
+          - name: VITE_API_URL
+            value: http://codenames.eastus.azurecontainer.io:8080
         resources:
           requests:
             cpu: 1
@@ -49,7 +52,7 @@ properties:
   osType: Linux
   ipAddress:
     type: Public
-    dnsNameLabel: codenames-ece366
+    dnsNameLabel: codenames
     ports:
       - protocol: tcp
         port: 5432
