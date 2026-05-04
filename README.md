@@ -20,14 +20,14 @@ When the game ends, players may select the home button to return to the home pag
 
 ## Screenshots
 <p align="center">
-  <h2>Home Page:</h2>
+  <h3>Home Page:</h3>
   <img width="600" alt="Screenshot 2026-05-04 at 4 23 14 PM" src="https://github.com/user-attachments/assets/fe833091-7418-4509-b551-b687dd6f0cb0" />
   
-  <h2>Lobby Page:</h2>
-  <img width="600" alt="Screenshot 2026-05-04 at 4 24 46 PM" src="https://github.com/user-attachments/assets/de399bd3-49a7-4444-8cf5-eac4ca6810a0" />
-  
-  <h2>Game Page:</h2>
+  <h3>Lobby Page:</h3>
   <img width="600" alt="Screenshot 2026-05-04 at 4 24 11 PM" src="https://github.com/user-attachments/assets/fb572e8e-cb4c-47c0-b8cc-e5fe770afb05" />
+   
+  <h3>Game Page:</h3>
+  <img width="600" alt="Screenshot 2026-05-04 at 4 24 46 PM" src="https://github.com/user-attachments/assets/de399bd3-49a7-4444-8cf5-eac4ca6810a0" />
   
 </p>
 
