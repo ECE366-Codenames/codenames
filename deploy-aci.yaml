@@ -41,8 +41,6 @@ properties:
       properties:
         image: codenames.azurecr.io/frontend:latest
         environmentVariables:
-          - name: VITE_API_URL
-            value: http://codenames.eastus.azurecontainer.io:8080
         resources:
           requests:
             cpu: 1
