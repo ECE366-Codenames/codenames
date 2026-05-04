@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_URL = import.meta.env.VITE_API_URL;
 export const api = {
     createGame: async () => {
         const response = await fetch(`${API_URL}/create`, {
@@ -31,6 +31,9 @@ export const api = {
         const response = await fetch(`${API_URL}/game/${gameId}/join?playerId=${playerId}`, {
             method: 'POST',
         });
+        if (!response.ok) {
+            throw new Error('Failed to join game');
+        }
         return response.text();
     },
     getPlayers: async (gameId) => {

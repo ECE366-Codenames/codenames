@@ -8,10 +8,17 @@ export default function Card({card, onGuess, revealed, canGuess}) {
     };
 
     const getCardClass = () => {
-        if (!card.type) return 'card';
-        const colorMap = { RED: 'red', BLUE: 'blue', NEUTRAL: 'neutral', ASSASSIN: 'black' };
-        const color = colorMap[card.type];
-        return `card card-${color}`;
+        let classes = 'card';
+        if (card.type) {
+            const colorMap = { RED: 'red', BLUE: 'blue', NEUTRAL: 'neutral', ASSASSIN: 'black' };
+            const color = colorMap[card.type];
+            classes += ` card-${color}`;
+        }
+        if (revealed) {
+            classes += ' revealed';
+        }
+
+        return classes;
     };
 
     return (

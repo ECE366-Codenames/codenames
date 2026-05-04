@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 function HomePage() {
     const [joinGameId, setJoinGameId] = useState('');
     const { currentUser, logout } = useAuth();
+    const {playerId} = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,8 +27,15 @@ function HomePage() {
     };
 
     const joinGame = async () => {
-        if (joinGameId) { // TODO: make sure player cant join game if already started
-            navigate(`/lobby/${joinGameId}`);
+        if (joinGameId) {
+            try {
+                await api.joinGame(joinGameId, playerId);
+                navigate(`/lobby/${joinGameId}`);
+            } catch (error) {
+                alert('Invalid game ID');
+                console.error('Error joining game:', error);
+            }
+
         }
     };
 

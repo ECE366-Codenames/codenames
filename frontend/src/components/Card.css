@@ -2,19 +2,26 @@
     background: #fef3c7;
     border: 3px solid #d97706;
     border-radius: 12px;
-    padding: 20px;
-    display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 15px;
+    font-size: clamp(10px, 1vw, 16px);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
-    min-height: 90px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
     position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    aspect-ratio: 1;
 }
 
 .card:hover {
@@ -61,4 +68,9 @@
 .card-black:hover {
     transform: translateY(-4px) scale(1.02);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card.revealed {
+    opacity: 0.8;
+    filter: brightness(0.5);
 }

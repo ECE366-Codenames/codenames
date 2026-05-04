@@ -1,8 +1,23 @@
 .app {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0px;
   min-height: 100vh;
+  width: 90%;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Buttons */
@@ -80,6 +95,7 @@ input:focus {
   border-radius: 16px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  margin: 0 24px;
 }
 
 .auth-page input {
@@ -219,17 +235,79 @@ input:focus {
 }
 
 .players {
-  padding: 32px;
+  padding: 24px;
   background: var(--bg);
   border-radius: 16px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  margin-top: 16px;
 }
 
 .players h3 {
-  margin: 0 0 20px 0;
+  margin: 0 0 16px 0;
   color: var(--text-h);
-  font-size: 20px;
+  font-size: 18px;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  column-gap: 12px;
+  align-items: start;
+}
+
+.team-column {
+  display: grid;
+  grid-template-rows: auto 1fr 1fr;
+  row-gap: 8px;
+}
+
+.team-column h4 {
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  text-align: center;
+  height: auto;
+  white-space: nowrap;
+}
+
+.team-column.red h4 {
+  color: #ef4444;
+}
+
+.team-column.blue h4 {
+  color: #3b82f6;
+}
+
+.team-column.role .player-item {
+  border: 2px solid transparent;
+}
+
+.player-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-item.role {
+  overflow: visible;
+}
+
+.game-page.red-turn .team-column.red .player-item  {
+  background: var(--active-player-bg);
+  border-radius: 8px;
+}
+
+.game-page.blue-turn .team-column.blue .player-item {
+  background: var(--active-player-bg);
+  border-radius: 8px;
+}
+
+.player-item.active {
+  border: 2px solid;
+  border-radius: 8px;
 }
 
 .players > div {
@@ -244,24 +322,48 @@ input:focus {
 /* Game Page */
 .game-page {
   padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding-bottom: 0;
+  padding-top: 0;
+  max-width: 1600px;
+  margin: 0;
   margin-top: 16px;
+  margin-bottom: 16px;
+  height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
-/*.game-page.my-turn-red {*/
-/*  box-shadow: 0 0 30px 8px rgba(239, 68, 68, 0.6),*/
-/*              0 0 60px 15px rgba(239, 68, 68, 0.3);*/
-/*  border-radius: 8px;*/
-/*  transition: box-shadow 0.3s ease;*/
-/*}*/
+.game-layout {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
 
-/*.game-page.my-turn-blue {*/
-/*  box-shadow: 0 0 30px 8px rgba(59, 130, 246, 0.6),*/
-/*              0 0 60px 15px rgba(59, 130, 246, 0.3);*/
-/*  border-radius: 8px;*/
-/*  transition: box-shadow 0.3s ease;*/
-/*}*/
+.game-sidebar {
+  flex: 0 0 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding-left: 10px;
+  padding-right: 5px;
+  padding-bottom: 20px;
+  max-width: 400px;
+  min-width: 350px;
+}
+
+.game-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 16px;
+}
 
 .game-page .controls {
   display: flex;
@@ -282,8 +384,6 @@ input:focus {
   border-radius: 12px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
-  margin-bottom: 24px;
-  margin-top: 24px;
 }
 
 .game-status h3 {
@@ -295,8 +395,9 @@ input:focus {
 
 .game-status-info {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  container-type: inline-size;
   gap: 32px;
 }
 
@@ -319,23 +420,28 @@ input:focus {
   opacity: 0.7;
   margin-bottom: 8px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
 .status-value {
-  font-size: 20px;
+  font-size: 4.5cqw;
   font-weight: 600;
   color: var(--text-h);
 }
 
 .clue-display {
-  font-size: 28px;
+  font-size: 6cqw;
   font-weight: 700;
   color: var(--text-h);
+  text-align: center;
+  line-height: 1.2;
+  white-space: normal;
+  overflow-wrap: break-word;
+  max-width: 40cqw;
 }
 
 .clue-number {
-  font-size: 24px;
-  opacity: 0.8;
+  font-size: 6cww;
 }
 
 .clue-form {
@@ -348,8 +454,6 @@ input:focus {
   border-radius: 12px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
-  margin-bottom: 24px;
-  margin-top: 24px;
   flex-wrap: wrap;
 }
 
@@ -364,21 +468,26 @@ input:focus {
 }
 
 .board {
+  flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-  margin-top: 24px;
+  gap: .6vw;
+  margin: 0;
+  width: 100%;
+  height: 96%;
+  max-width: 100%;
+  margin-top: 16px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
 }
 
 .game-page.red-turn {
   outline: 4px solid #ef4444;
-  outline-offset: -4px;
   border-radius: 8px;
 }
 
 .game-page.blue-turn {
   outline: 4px solid #3b82f6;
-  outline-offset: -4px;
   border-radius: 8px;
 }
 
@@ -387,6 +496,21 @@ input:focus {
     min-width: auto;
     width: 100%;
   }
+
+  .game-layout {
+    flex-direction: column;
+  }
+
+  .game-sidebar {
+    flex: 0 0 auto;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .game-page {
+    padding-bottom: 30px;
+  }
+
 }
 
 /* Rules Page */
