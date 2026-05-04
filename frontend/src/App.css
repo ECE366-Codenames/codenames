@@ -95,6 +95,7 @@ input:focus {
   border-radius: 16px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  margin: 0 24px;
 }
 
 .auth-page input {
