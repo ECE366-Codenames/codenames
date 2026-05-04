@@ -6,6 +6,7 @@ import codenames.dto.PlayerInitDTO;
 import codenames.model.Player;
 import codenames.model.GamePlayer;
 import codenames.model.Game;
+import codenames.model.Status;
 import codenames.repository.GamePlayerRepository;
 import codenames.repository.PlayerRepository;
 import codenames.repository.GameRepository;
@@ -22,12 +23,14 @@ public class PlayerService {
     private final GameRepository gameRepository;
     private final GamePlayerRepository gamePlayerRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final GameService gameService;
 
-    public PlayerService(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, SimpMessagingTemplate messagingTemplate) {
+    public PlayerService(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, SimpMessagingTemplate messagingTemplate, GameService gameService) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
         this.gamePlayerRepository = gamePlayerRepository;
         this.messagingTemplate = messagingTemplate;
+        this.gameService = gameService;
     }
 
     @Transactional
@@ -110,6 +113,9 @@ public class PlayerService {
                 .orElseThrow(() -> new RuntimeException("Player not in game"));
 
         gamePlayerRepository.delete(gp);
+        if (game.getStatus() != Status.ABORTED) {
+            gameService.abort(gameId);
+        }
         notifyLobbyUpdate(gameId, "player-left");
     }
 

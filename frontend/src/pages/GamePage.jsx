@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { api } from '../services/api';
 import Card from '../components/Card';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useGameSocket } from '../hooks/useGameSocket';
 
@@ -14,6 +14,7 @@ function GamePage() {
     const [clueWord, setClueWord] = useState('');
     const [clueNumber, setClueNumber] = useState(1);
     const spymasterModeRef = useRef(spymasterMode);
+    const navigate = useNavigate();
     
     const currentPlayer = players.find(player => String(player.playerId) === String(playerId));
     const isMyTurn = currentPlayer?.red === game?.redTurn;
@@ -98,6 +99,21 @@ function GamePage() {
         await loadGame(gameId, spymasterModeRef.current);
     }
 
+    const handleGoHome = async (e) => {
+        e.preventDefault();
+        try {
+            // Only leave game if it's not already aborted
+            const match = location.pathname.match(/\/(game|lobby)\/(\d+)/);
+            if (match && playerId) {
+                const gameId = match[2];
+                await api.leaveGame(gameId, playerId);
+            }
+        } catch (error) {
+            console.error('Error leaving game:', error);
+        }
+        navigate('/');
+    };
+
     return (
         <div className={`game-page${game?.status === 'STARTED' ? (game?.redTurn ? ' red-turn' : ' blue-turn') : ''}`}>
             {game && game.status === 'COMPLETE' && (
@@ -112,6 +128,22 @@ function GamePage() {
                     <h2 style={{color: game.redWin ? '#ef4444' : '#3b82f6', margin: '0 0 10px 0'}}>
                         Game Over! {game.redWin ? ' Red Team' : ' Blue Team'} Wins!
                     </h2>
+                    <button className="btn btn-primary" onClick={() => navigate('/')}>Home</button>
+                </div>
+            )}
+
+            {game && game.status === 'ABORTED' && (
+                <div className="game-status" style={{
+                    padding: '20px',
+                    borderRadius: '8px',
+                    textAlign: 'center',
+                    marginBottom: '20px',
+                    marginTop: '20px'
+                }}>
+                    <h2 style={{color: '#ef4444', margin: '0 0 10px 0'}}>
+                        Game Aborted!
+                    </h2>
+                    <button className="btn btn-primary" onClick={handleGoHome}>Home</button>
                 </div>
             )}
 

@@ -27,7 +27,7 @@ function HomePage() {
     };
 
     const joinGame = async () => {
-        if (joinGameId) { // TODO: make sure player cant join game if already started
+        if (joinGameId) {
             try {
                 await api.joinGame(joinGameId, playerId);
                 navigate(`/lobby/${joinGameId}`);
