@@ -55,11 +55,11 @@ public class GameService {
 
         for (int i = 0; i < players.size(); i++) {
             GamePlayer gp = players.get(i);
-
-            if (i < 2) { 
+            //role assignment technically isn't random, but since the order players join is random, roles are effectively random
+            if (i < 2) { //the first 2 players are red, the first of them is the spymaster
                 gp.setRed(true);          
                 gp.setSpymaster(i == 0);  
-            } else {
+            } else { //the next 2 players are blue, the first of them is the spymaster
                 gp.setRed(false);          
                 gp.setSpymaster(i == 2);  
             }
@@ -73,7 +73,7 @@ public class GameService {
 
         List<GameCard> cards = new ArrayList<>();
 
-        for (int i = 0; i < words.size(); i++) {
+        for (int i = 0; i < words.size(); i++) {//create cards and assign words and roles to them
             GameCard card = new GameCard(game, words.get(i), cardTypes.get(i), i);
             cards.add(card);
         }
@@ -91,13 +91,13 @@ public class GameService {
 
     private List<CardType> assignCardTypes() {
         List<CardType> cardTypes = new ArrayList<>();
-
-        for (int i = 0; i < 9; i++) cardTypes.add(CardType.RED);
+        
+        for (int i = 0; i < 9; i++) cardTypes.add(CardType.RED); 
         for (int i = 0; i < 8; i++) cardTypes.add(CardType.BLUE);
         for (int i = 0; i < 7; i++) cardTypes.add(CardType.NEUTRAL);
         cardTypes.add(CardType.ASSASSIN);
 
-        Collections.shuffle(cardTypes);
+        Collections.shuffle(cardTypes); //randomize board
         return cardTypes;
     }
 
@@ -113,10 +113,10 @@ public class GameService {
             throw new RuntimeException("Not guessing phase");
         }
 
-        //make sure that the player making the guess is the guesser on the currently-going team
         GamePlayer currentPlayer = gamePlayerRepository.findByGameAndPlayer_Id(game, playerId)
                 .orElseThrow(() -> new RuntimeException("Player not in game"));
-        
+
+        //make sure that the player making the guess is the guesser on the currently-going team
         if (currentPlayer.isSpymaster() || currentPlayer.isRed() != game.getRedTurn()) {
             throw new RuntimeException("You cannot make a guess at this time");
         }
@@ -174,7 +174,7 @@ public class GameService {
     public void passTurn(Long gameId) {
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new RuntimeException("Game not found"));
 
-        game.setRedTurn(!game.getRedTurn());
+        game.setRedTurn(!game.getRedTurn()); //flip whose turn it is
         game.setTurnPhase(TurnPhase.CLUE);
         game.setClueWord(null);
         game.setClueNumber(0);
@@ -187,7 +187,7 @@ public class GameService {
         long redRemaining = game.getCards().stream().filter(c -> c.getCardType() == CardType.RED && !c.isRevealed()).count();
         long blueRemaining = game.getCards().stream().filter(c -> c.getCardType() == CardType.BLUE && !c.isRevealed()).count();
 
-        if (redRemaining == 0) {
+        if (redRemaining == 0) { //i.e. no cards left
             game.setStatus(Status.COMPLETE);
             game.setRedWin(true);
         } else if (blueRemaining == 0) {
@@ -205,7 +205,7 @@ public class GameService {
         }
         game.setClueWord(clueWord);
         game.setClueNumber(clueNumber);
-        game.setGuessesRemaining(clueNumber + 1);
+        game.setGuessesRemaining(clueNumber + 1); //1 extra for bonus guess
         game.setTurnPhase(TurnPhase.GUESS);
 
         notifyGameUpdate(gameId);
@@ -218,7 +218,7 @@ public class GameService {
             game.setStatus(Status.ABORTED);
             return;
         }
-        if(game.getStatus() != Status.STARTED){
+        if(game.getStatus() != Status.STARTED){ //i.e. if completed
             throw new RuntimeException("Game already ended");
         }
         gameCardRepository.deleteByGameId(gameId);
