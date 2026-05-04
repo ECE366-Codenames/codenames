@@ -113,7 +113,7 @@ public class PlayerService {
                 .orElseThrow(() -> new RuntimeException("Player not in game"));
 
         gamePlayerRepository.delete(gp);
-        if (game.getStatus() != Status.ABORTED) {
+        if (game.getStatus() == Status.STARTED) {
             gameService.abort(gameId);
         }
         notifyLobbyUpdate(gameId, "player-left");

@@ -15,7 +15,7 @@ export default function Card({card, onGuess, revealed, canGuess}) {
             classes += ` card-${color}`;
         }
         if (revealed) {
-            classes += ' guessed';
+            classes += ' revealed';
         }
 
         return classes;

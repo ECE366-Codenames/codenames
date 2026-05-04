@@ -70,7 +70,7 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-.card.guessed {
+.card.revealed {
     opacity: 0.8;
     filter: brightness(0.5);
 }
