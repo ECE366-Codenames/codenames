@@ -31,6 +31,9 @@ export const api = {
         const response = await fetch(`${API_URL}/game/${gameId}/join?playerId=${playerId}`, {
             method: 'POST',
         });
+        if (!response.ok) {
+            throw new Error('Failed to join game');
+        }
         return response.text();
     },
     getPlayers: async (gameId) => {

@@ -60,6 +60,10 @@ public class PlayerService {
             return playerId;
         }
 
+        if (game.getStatus() != codenames.model.Status.WAITING) {
+            throw new IllegalStateException("Game has already started");
+        }
+
         List<GamePlayer> players = gamePlayerRepository.findByGame(game);
 
         if (players.size() >= 4) {
