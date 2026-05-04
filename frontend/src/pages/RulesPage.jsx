@@ -27,7 +27,7 @@ function RulesPage() {
                 <h3>Setup</h3>
                 <p>
                     Players are divided into two teams: Red and Blue. Each team has a Spymaster 
-                    who knows which cards belong to their team, and Field Operative who does not. 
+                    who knows which cards belong to their team, and a Field Operative who does not. 
                     The Spymaster gives one-word clues to the Field Operative to help them
                     identify the correct cards.
                 </p>
