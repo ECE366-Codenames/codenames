@@ -35,11 +35,11 @@ public class PlayerService {
 
     @Transactional
     public String createOrGetPlayer(String firebaseUid, String email, String username) {
-        // Check if player already exists
+        //check if player already exists
         return playerRepository.findById(firebaseUid)
                 .map(Player::getId)
                 .orElseGet(() -> {
-                    // Create new player with Firebase UID as ID
+                    //create new player with Firebase uid as id
                     Player player = new Player();
                     player.setId(firebaseUid);
                     player.setEmail(email);
@@ -76,7 +76,7 @@ public class PlayerService {
         GamePlayer gp = new GamePlayer(game, player);
         gamePlayerRepository.save(gp);
 
-        notifyLobbyUpdate(gameId, "player-joined");
+        notifyLobbyUpdate(gameId, "player-joined"); //to get updates on other players screens
         return playerId;
     }
 
@@ -113,7 +113,7 @@ public class PlayerService {
                 .orElseThrow(() -> new RuntimeException("Player not in game"));
 
         gamePlayerRepository.delete(gp);
-        if (game.getStatus() == Status.STARTED) {
+        if (game.getStatus() == Status.STARTED) { //if player leaves game, game aborts
             gameService.abort(gameId);
         }
         notifyLobbyUpdate(gameId, "player-left");
