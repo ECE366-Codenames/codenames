@@ -39,3 +39,4 @@
 10. Clause 8.06: Improve their knowledge of this Code, its interpretation, and its application to their work.
 
    - In a lecture devoted to the Code of Ethics, and when working on this document, we studied the Code and considered its application and relevance to our work. 
+
