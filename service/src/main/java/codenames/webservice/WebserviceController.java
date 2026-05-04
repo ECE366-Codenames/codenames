@@ -42,12 +42,12 @@ public class WebserviceController {
         gameService.guess(id, position, playerId);
     }
 
-    @PostMapping("/game/{id}/end")
+    @PostMapping("/game/{id}/end") //used for aborting games that haven't ended naturally
     public void endGame(@PathVariable Long id) {
         gameService.abort(id);
     }
 
-    @PostMapping("/game/{id}/cleanup")
+    @PostMapping("/game/{id}/cleanup") //deletes cards associated with a completed game
     public void cleanup(@PathVariable Long id) {
         gameService.cleanup(id);
     }
@@ -62,7 +62,7 @@ public class WebserviceController {
         return playerService.addPlayerToGame(id, playerId);
     }
 
-    @GetMapping("/game/{id}/players")
+    @GetMapping("/game/{id}/players") //returns players in a given game
     public List<GamePlayerDTO> getPlayers(@PathVariable Long id) {
         return playerService.getPlayersByGameId(id);
     }
@@ -72,12 +72,12 @@ public class WebserviceController {
         return playerService.createOrGetPlayer(dto.getFirebaseUid(), dto.getEmail(), dto.getUsername());
     }
 
-    @PostMapping("/game/{id}/clue")
+    @PostMapping("/game/{id}/clue") //called by spymaster to submit clue, role checked internally
     public void submitClue(@PathVariable Long id, @RequestBody ClueDTO dto) {
         gameService.submitClue(id, dto.getWord(), dto.getNumber());
     }
 
-    @PostMapping("/game/{id}/pass")
+    @PostMapping("/game/{id}/pass") //used to end turn prematurely
     public void passTurn(@PathVariable Long id) {
         gameService.passTurn(id);
     }
