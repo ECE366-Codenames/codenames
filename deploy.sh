@@ -1,7 +1,7 @@
 #!/bin/bash
 docker build --platform linux/amd64 -t codenames.azurecr.io/postgres:latest ./database
 docker build --platform linux/amd64 -t codenames.azurecr.io/service:latest ./service
-docker build --platform linux/amd64 -t codenames.azurecr.io/frontend:latest ./frontend
+docker build --platform linux/amd64 --build-arg VITE_API_URL=http://codenames.eastus.azurecontainer.io:8080 -t codenames.azurecr.io/frontend:latest ./frontend
 docker push codenames.azurecr.io/postgres:latest
 docker push codenames.azurecr.io/service:latest
 docker push codenames.azurecr.io/frontend:latest
